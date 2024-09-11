@@ -38,7 +38,7 @@ const SliderComponent = () => {
         Ravishing Quality
       </h1>
       <div>
-        <ul className="text-xs font-semibold gap-3 flex items-center justify-center sm:text-xl  sm:gap-7 bg-indigo-600 text-gray-700 p-2 rounded-lg my-2 sm:font-bold ">
+        <ul className="text-xs font-semibold gap-3 flex items-center justify-center sm:text-md  sm:gap-7 bg-indigo-600 text-gray-700 p-2 rounded-lg my-2 sm:font-semibold ">
           {categoriesArray.map((c) => {
             return (
               <li

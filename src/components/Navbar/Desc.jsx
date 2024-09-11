@@ -22,7 +22,7 @@ function Desc() {
 
       {/* Video Section */}
       <div className="lg:w-1/2 flex justify-center">
-        <video width={300} loop autoPlay muted className="">
+        <video width={400} loop autoPlay muted className="">
           <source src={DescVedio} type="video/mp4" />
           Your browser does not support the video tag.
         </video>

@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import logo from "../../assets/logo.png";
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white border-b border-gray-300 relative z-50">
+    <nav className="bg-white  border-gray-300 relative z-50">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         {/* Logo */}
         <div className="text-xl font-bold">
           <Link to="/" className="text-gray-800 ">
-            FixandPolish
+            <img src={logo} width={150} className="" alt="" />
           </Link>
         </div>
 
