@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -7,7 +7,7 @@ const Navbar = () => {
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white border-b border-gray-300">
+    <nav className="bg-white border-b border-gray-300 relative z-50">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         {/* Logo */}
         <div className="text-xl font-bold">
@@ -17,14 +17,23 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-4">
-          <Link to="/about-us" className="text-gray-800 hover:text-blue-500">
+        <div className="hidden md:flex justify-center items-center space-x-4">
+          <Link
+            to="/about-us"
+            className="text-gray-800 text-sm  hover:text-indigo-800"
+          >
             About Us
+          </Link>
+          <Link
+            to="/about-us"
+            className="text-gray-800 text-sm  hover:text-indigo-800"
+          >
+            Pricing
           </Link>
           <div className="relative">
             <button
               onClick={() => setIsToolsMenuOpen(!isToolsMenuOpen)}
-              className="text-gray-800 hover:text-blue-500 focus:outline-none"
+              className="text-gray-800 text-sm  hover:text-indigo-800 focus:outline-none"
             >
               Tools
             </button>
@@ -49,7 +58,7 @@ const Navbar = () => {
           </div>
           <Link
             to="/signup"
-            className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-900 "
+            className="px-4 py-2 text-sm font-bold bg-indigo-600 text-white rounded hover:bg-indigo-800 "
           >
             Sign Up
           </Link>
@@ -109,7 +118,7 @@ const Navbar = () => {
             </div>
             <Link
               to="/signup"
-              className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-900 "
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-800 "
             >
               Sign Up
             </Link>
