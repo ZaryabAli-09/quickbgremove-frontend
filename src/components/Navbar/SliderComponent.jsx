@@ -20,7 +20,7 @@ const SliderComponent = () => {
 
   const [activeCategorySliderImage, setActiveCategorySliderImage] =
     useState("Graphics");
-  console.log(activeCategorySliderImage);
+
   const handleMouseMove = (e) => {
     if (e.buttons === 1) {
       const { left, width } = containerRef.current.getBoundingClientRect();
@@ -29,9 +29,18 @@ const SliderComponent = () => {
       setPosition(newPosition);
     }
   };
+
+  const handleTouchMove = (e) => {
+    const { left, width } = containerRef.current.getBoundingClientRect();
+    const offsetX = e.touches[0].clientX - left;
+    const newPosition = Math.min(Math.max((offsetX / width) * 100, 0), 100);
+    setPosition(newPosition);
+  };
+
   function handleCategoriesImageChanger(e) {
     setActiveCategorySliderImage(e.target.textContent);
   }
+
   return (
     <div>
       <h1 className="text-4xl md:text-3xl lg:text-5xl text-center font-bold text-gray-700 my-10">
@@ -58,12 +67,19 @@ const SliderComponent = () => {
         ref={containerRef}
         className="border-2 relative w-[80vw] h-[50vh]  sm:w-[80vw] sm:h-[60vh] md:w-[60vw] lg:w-[50vw] lg:h-[70vh]  rounded-xl overflow-hidden"
         onMouseMove={handleMouseMove}
+        onTouchMove={handleTouchMove}
         onMouseLeave={() => setPosition(50)}
         onMouseDown={() =>
           document.addEventListener("mousemove", handleMouseMove)
         }
         onMouseUp={() =>
           document.removeEventListener("mousemove", handleMouseMove)
+        }
+        onTouchStart={() =>
+          document.addEventListener("touchmove", handleTouchMove)
+        }
+        onTouchEnd={() =>
+          document.removeEventListener("touchmove", handleTouchMove)
         }
       >
         <img

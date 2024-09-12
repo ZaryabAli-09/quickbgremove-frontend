@@ -19,40 +19,34 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex justify-center items-center space-x-4">
           <Link
-            to="/about-us"
-            className="text-gray-800 text-sm  hover:text-indigo-800"
-          >
-            About Us
-          </Link>
-          <Link
-            to="/about-us"
-            className="text-gray-800 text-sm  hover:text-indigo-800"
+            to="/pricing"
+            className="text-gray-700 text-sm  hover:text-indigo-800 font-bold"
           >
             Pricing
           </Link>
           <div className="relative">
             <button
               onClick={() => setIsToolsMenuOpen(!isToolsMenuOpen)}
-              className="text-gray-800 text-sm  hover:text-indigo-800 focus:outline-none"
+              className="text-gray-700 text-sm  hover:text-indigo-800 focus:outline-none font-bold"
             >
               Tools
             </button>
             <div
-              className={`absolute top-10 -left-20  w-48 bg-white border border-gray-300 shadow-lg ${
+              className={`absolute top-10 -left-20  w-48 bg-white border border-gray-300 rounded-lg overflow-hidden shadow-lg ${
                 isToolsMenuOpen ? "block" : "hidden"
               }`}
             >
               <Link
                 to="/tools/bg-remover"
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
               >
                 BG Remover
               </Link>
               <Link
                 to="/tools/picture-enhance"
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
               >
-                Picture Enhance
+                Document Scanner
               </Link>
             </div>
           </div>
@@ -87,13 +81,19 @@ const Navbar = () => {
             >
               <FaTimes size={24} />
             </button>
-            <Link to="/about-us" className=" hover:bg-gray-100 p-2 rounded">
-              About Us
-            </Link>
+
             <div className="relative">
+              <button className="w-full   hover:bg-gray-100 p-2 rounded text-left font-bold">
+                <Link
+                  to="/pricing"
+                  className="text-gray-700   hover:text-indigo-800 "
+                >
+                  Pricing
+                </Link>
+              </button>
               <button
                 onClick={() => setIsToolsMenuOpen(!isToolsMenuOpen)}
-                className="w-full  hover:bg-gray-100 p-2 rounded text-left"
+                className="w-full   hover:bg-gray-100 p-2 rounded text-left font-bold"
               >
                 Tools
               </button>
@@ -104,15 +104,15 @@ const Navbar = () => {
               >
                 <Link
                   to="/tools/bg-remover"
-                  className="block px-4 py-2 hover:bg-gray-100"
+                  className="block px-4 py-2 hover:bg-gray-100  hover:text-indigo-800 text-sm font-bold text-gray-700 "
                 >
                   BG Remover
                 </Link>
                 <Link
                   to="/tools/picture-enhance"
-                  className="block px-4 py-2 hover:bg-gray-100"
+                  className="block px-4 py-2 hover:bg-gray-100  hover:text-indigo-800 text-sm font-bold text-gray-700 "
                 >
-                  Picture Enhance
+                  Document Scanner
                 </Link>
               </div>
             </div>
