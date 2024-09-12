@@ -37,16 +37,28 @@ const Navbar = () => {
               }`}
             >
               <Link
-                to="/tools/bg-remover"
+                to="/"
                 className="block px-4 py-2 text-gray-700 font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
               >
                 BG Remover
               </Link>
               <Link
-                to="/tools/picture-enhance"
+                to="/document-scanner"
                 className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
               >
                 Document Scanner
+              </Link>
+              <Link
+                to="/batch-processing"
+                className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
+              >
+                Batch Processing
+              </Link>
+              <Link
+                to="/image-resizer"
+                className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
+              >
+                Image Resizer
               </Link>
             </div>
           </div>
@@ -103,16 +115,28 @@ const Navbar = () => {
                 }`}
               >
                 <Link
-                  to="/tools/bg-remover"
+                  to="/"
                   className="block px-4 py-2 hover:bg-gray-100  hover:text-indigo-800 text-sm font-bold text-gray-700 "
                 >
                   BG Remover
                 </Link>
                 <Link
-                  to="/tools/picture-enhance"
+                  to="/document-scanner"
                   className="block px-4 py-2 hover:bg-gray-100  hover:text-indigo-800 text-sm font-bold text-gray-700 "
                 >
                   Document Scanner
+                </Link>
+                <Link
+                  to="/batch-processing"
+                  className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
+                >
+                  Batch Processing
+                </Link>
+                <Link
+                  to="/image-resizer"
+                  className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
+                >
+                  Image Resizer
                 </Link>
               </div>
             </div>

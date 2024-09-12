@@ -1,12 +1,11 @@
 import React from "react";
 import { FaFacebookF, FaLinkedinIn, FaGithub } from "react-icons/fa";
-import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className="bg-indigo-600 text-white pt-10 pb-6 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
         {/* Logo */}
         <Link to={"/"} className="flex items-center space-x-4">
           <span className="text-lg text-black font-bold">
@@ -16,47 +15,31 @@ const Footer = () => {
 
         {/* Navigation Links */}
         <nav className="flex space-x-6 text-sm md:text-base">
-          <a href="/about" className="hover:underline">
+          <Link to="/about" className="hover:underline  text-sm">
             About Us
-          </a>
-          <a href="/privacy-policy" className="hover:underline">
+          </Link>
+          <Link to="/privacy-policy" className="hover:underline text-sm">
             Privacy Policy
-          </a>
-          <a href="/terms-of-service" className="hover:underline">
+          </Link>
+          <Link to="/terms-of-service" className="hover:underline text-sm">
             Terms of Service
-          </a>
-          <a href="/contact" className="hover:underline">
+          </Link>
+          <Link to="/contact" className="hover:underline text-sm">
             Contact Us
-          </a>
+          </Link>
         </nav>
       </div>
 
       {/* Social Links */}
       <div className="flex justify-center space-x-6 mt-6">
-        <a
-          href="https://www.linkedin.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-gray-200"
-        >
-          <FaLinkedinIn size={20} />
-        </a>
-        <a
-          href="https://www.facebook.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-gray-200"
-        >
-          <FaFacebookF size={20} />
-        </a>
-        <a
-          href="https://github.com"
+        <Link
+          to="https://github.com/ZaryabAli-09"
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-gray-200"
         >
           <FaGithub size={20} />
-        </a>
+        </Link>
       </div>
 
       {/* Copyright */}
