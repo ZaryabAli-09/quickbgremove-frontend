@@ -44,7 +44,7 @@ function BackgroundRemoveComp() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/uploadImage", {
+      const res = await fetch("http://localhost:3000/api/tools/removebg", {
         method: "POST",
         body: formData,
       });
