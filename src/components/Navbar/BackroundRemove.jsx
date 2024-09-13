@@ -44,11 +44,14 @@ function BackgroundRemoveComp() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:4000/api/tools/removebg", {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
+      const res = await fetch(
+        "https://quickbgremove.onrender.com/api/tools/removebg",
+        {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        }
+      );
 
       if (res.ok) {
         const blob = await res.blob();
