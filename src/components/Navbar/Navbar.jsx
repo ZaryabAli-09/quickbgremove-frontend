@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo.webp";
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
@@ -12,7 +12,7 @@ const Navbar = () => {
         {/* Logo */}
         <div className="text-xl font-bold">
           <Link to="/" className="text-gray-800 ">
-            <img src={logo} width={150} className="" alt="" />
+            <img loading="lazy" src={logo} width={150} className="" alt="" />
           </Link>
         </div>
 

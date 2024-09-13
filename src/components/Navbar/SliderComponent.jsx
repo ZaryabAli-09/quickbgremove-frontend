@@ -1,16 +1,16 @@
 import React, { useState, useRef } from "react";
 import { BsArrowsMove } from "react-icons/bs";
 
-import image1 from "../../assets/1.jpg";
-import image11 from "../../assets/1.png";
-import image2 from "../../assets/2.jpg";
-import image22 from "../../assets/2.png";
-import image3 from "../../assets/3.jpg";
-import image33 from "../../assets/3.png";
-import image4 from "../../assets/4.jpg";
-import image44 from "../../assets/4.png";
-import image5 from "../../assets/5.jpeg";
-import image55 from "../../assets/5.png";
+import image1 from "../../assets/11.webp";
+import image11 from "../../assets/1.webp";
+import image2 from "../../assets/22.webp";
+import image22 from "../../assets/2.webp";
+import image3 from "../../assets/33.webp";
+import image33 from "../../assets/3.webp";
+import image4 from "../../assets/44.webp";
+import image44 from "../../assets/4.webp";
+import image5 from "../../assets/55.webp";
+import image55 from "../../assets/5.webp";
 
 const categoriesArray = ["People", "Products", "Animals", "Cars", "Graphics"];
 
@@ -83,6 +83,7 @@ const SliderComponent = () => {
         }
       >
         <img
+          loading="lazy"
           src={
             activeCategorySliderImage === "People"
               ? image1
@@ -101,6 +102,7 @@ const SliderComponent = () => {
           style={{ clipPath: `inset(0 0 0 ${position}%)` }}
         />
         <img
+          loading="lazy"
           src={
             activeCategorySliderImage === "People"
               ? image11

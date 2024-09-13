@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
 import HeroVedio from "../../assets/hero1.mp4";
-import image1 from "../../assets/1.jpg";
-import image2 from "../../assets/2.jpg";
-import image3 from "../../assets/3.jpg";
-import image4 from "../../assets/4.jpg";
+import image1 from "../../assets/11.webp";
+import image2 from "../../assets/22.webp";
+import image3 from "../../assets/33.webp";
+import image4 from "../../assets/44.webp";
 import { useNavigate } from "react-router-dom";
 
 function BackgroundRemoveComp() {
@@ -152,6 +152,7 @@ function BackgroundRemoveComp() {
             </div>
           ) : localImageDisplay || imageUrl ? (
             <img
+              loading="lazy"
               className="w-full h-full object-contain"
               src={imageUrl || localImageDisplay}
               alt="Selected"
@@ -170,24 +171,28 @@ function BackgroundRemoveComp() {
           <div className="flex items-center justify-center gap-2">
             {" "}
             <img
+              loading="lazy"
               onClick={handleImageClick}
               className=" cursor-pointer w-[50px] h-[50px] object-cover rounded-lg"
               src={image1}
               alt=""
             />
             <img
+              loading="lazy"
               onClick={handleImageClick}
               className=" cursor-pointer w-[50px] h-[50px] object-cover rounded-lg"
               src={image2}
               alt=""
             />
             <img
+              loading="lazy"
               onClick={handleImageClick}
               className=" cursor-pointer w-[50px] h-[50px] object-cover rounded-lg"
               src={image3}
               alt=""
             />
             <img
+              loading="lazy"
               onClick={handleImageClick}
               className=" cursor-pointer w-[50px] h-[50px] object-cover rounded-lg"
               src={image4}
