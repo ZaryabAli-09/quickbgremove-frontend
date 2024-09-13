@@ -53,7 +53,7 @@ const TermsOfService = () => {
         </p>
         <p className="text-gray-700 leading-relaxed">
           If you have any questions about our Terms of Service, please contact
-          us at support@quickbgremove.com.
+          us at khanzaryab249@gmail.com.
         </p>
       </div>
     </div>

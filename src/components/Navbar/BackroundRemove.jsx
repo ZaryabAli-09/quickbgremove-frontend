@@ -1,12 +1,17 @@
 import { useState, useRef } from "react";
 import HeroVedio from "../../assets/hero1.mp4";
 import image1 from "../../assets/11.webp";
-import image2 from "../../assets/22.webp";
 import image3 from "../../assets/33.webp";
 import image4 from "../../assets/44.webp";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function BackgroundRemoveComp() {
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: adds smooth scrolling
+    });
+  };
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -146,8 +151,9 @@ function BackgroundRemoveComp() {
             <div className="flex flex-col items-center justify-center">
               <div className="w-16 h-16 border-t-4 border-black border-solid rounded-full animate-spin"></div>
               <p className="text-xs my-4">
-                Please wait <span className="font-extrabold">FixAndPolish</span>{" "}
-                Robots are working on you image
+                Please wait{" "}
+                <span className="font-extrabold">QuickBgRemove</span> Robots are
+                working on you image
               </p>
             </div>
           ) : localImageDisplay || imageUrl ? (
@@ -181,13 +187,6 @@ function BackgroundRemoveComp() {
               loading="lazy"
               onClick={handleImageClick}
               className=" cursor-pointer w-[50px] h-[50px] object-cover rounded-lg"
-              src={image2}
-              alt=""
-            />
-            <img
-              loading="lazy"
-              onClick={handleImageClick}
-              className=" cursor-pointer w-[50px] h-[50px] object-cover rounded-lg"
               src={image3}
               alt=""
             />
@@ -202,19 +201,21 @@ function BackgroundRemoveComp() {
 
           <p className="text-xs mt-4 text-gray-600 mb-4">
             By uploading an image or URL you agree to our{" "}
-            <span
-              onClick={() => navigate("/terms-of-service")}
+            <Link
               className="cursor-pointer underline font-bold"
+              onClick={scrollToTop}
+              to={"/terms-of-service"}
             >
               Terms of Service
-            </span>
+            </Link>
             . To learn more about how quickbgremove handles your data, check our{" "}
-            <span
-              onClick={() => navigate("/privacy-policy")}
+            <Link
               className="cursor-pointer underline font-bold"
+              onClick={scrollToTop}
+              to={"/privacy-policy"}
             >
-              Privacy Policy
-            </span>
+              Privacy policy
+            </Link>
             .
           </p>
         </div>

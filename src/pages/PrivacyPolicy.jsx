@@ -46,7 +46,7 @@ const PrivacyPolicy = () => {
         </p>
         <p className="text-gray-700 leading-relaxed">
           If you have any questions about our Privacy Policy, please contact us
-          at support@quickbgremove.com.
+          at khanzaryab249@gmail.com.
         </p>
       </div>
     </div>

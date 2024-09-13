@@ -1,30 +1,47 @@
 import React from "react";
-import { FaFacebookF, FaLinkedinIn, FaGithub } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: adds smooth scrolling
+    });
+  };
+
   return (
     <footer className="bg-indigo-600 text-white pt-10 pb-6 relative">
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+      <div className="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
         {/* Logo */}
-        <Link to={"/"} className="flex items-center space-x-4">
-          <span className="text-lg text-black font-bold">
-            QuickBG<span className="text-indigo-300">Remove</span>{" "}
-          </span>
+        <Link
+          to={"/"}
+          onClick={scrollToTop}
+          className="flex items-center justify-center space-x-4 text-lg font-bold "
+        >
+          QuickBGRemove
         </Link>
 
         {/* Navigation Links */}
-        <nav className="flex space-x-6 text-sm md:text-base">
-          <Link to="/about" className="hover:underline  text-sm">
+        <nav className="flex space-x-6 text-xs md:text-base">
+          <Link to="/about" onClick={scrollToTop} className="hover:underline">
             About Us
           </Link>
-          <Link to="/privacy-policy" className="hover:underline text-sm">
+          <Link
+            to="/privacy-policy"
+            onClick={scrollToTop}
+            className="hover:underline"
+          >
             Privacy Policy
           </Link>
-          <Link to="/terms-of-service" className="hover:underline text-sm">
+          <Link
+            to="/terms-of-service"
+            onClick={scrollToTop}
+            className="hover:underline"
+          >
             Terms of Service
           </Link>
-          <Link to="/contact" className="hover:underline text-sm">
+          <Link to="/contact" onClick={scrollToTop} className="hover:underline">
             Contact Us
           </Link>
         </nav>

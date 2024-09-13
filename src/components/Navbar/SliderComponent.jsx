@@ -3,8 +3,7 @@ import { BsArrowsMove } from "react-icons/bs";
 
 import image1 from "../../assets/11.webp";
 import image11 from "../../assets/1.webp";
-import image2 from "../../assets/22.webp";
-import image22 from "../../assets/2.webp";
+
 import image3 from "../../assets/33.webp";
 import image33 from "../../assets/3.webp";
 import image4 from "../../assets/44.webp";
@@ -12,7 +11,7 @@ import image44 from "../../assets/4.webp";
 import image5 from "../../assets/55.webp";
 import image55 from "../../assets/5.webp";
 
-const categoriesArray = ["People", "Products", "Animals", "Cars", "Graphics"];
+const categoriesArray = ["People", "Animals", "Cars", "Graphics"];
 
 const SliderComponent = () => {
   const [position, setPosition] = useState(50);
@@ -47,7 +46,7 @@ const SliderComponent = () => {
         Ravishing Quality
       </h1>
       <div>
-        <ul className="text-xs font-semibold gap-3 flex items-center justify-center sm:text-md  sm:gap-7 bg-indigo-600 text-gray-700 p-2 rounded-lg my-2 sm:font-semibold ">
+        <ul className="text-xs font-semibold gap-5 flex items-center justify-center sm:text-md  sm:gap-7 bg-indigo-600 text-gray-700 p-2 rounded-lg my-2 sm:font-semibold ">
           {categoriesArray.map((c) => {
             return (
               <li
@@ -89,8 +88,6 @@ const SliderComponent = () => {
               ? image1
               : activeCategorySliderImage === "Cars"
               ? image4
-              : activeCategorySliderImage === "Products"
-              ? image2
               : activeCategorySliderImage === "Animals"
               ? image3
               : activeCategorySliderImage === "Graphics"
@@ -108,8 +105,6 @@ const SliderComponent = () => {
               ? image11
               : activeCategorySliderImage === "Cars"
               ? image44
-              : activeCategorySliderImage === "Products"
-              ? image22
               : activeCategorySliderImage === "Animals"
               ? image33
               : activeCategorySliderImage === "Graphics"
