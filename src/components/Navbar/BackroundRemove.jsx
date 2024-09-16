@@ -49,10 +49,11 @@ function BackgroundRemoveComp() {
         {
           method: "POST",
           body: formData,
-          credentials: "include",
         }
       );
-
+      if (!res.ok) {
+        console.log(res);
+      }
       if (res.ok) {
         const blob = await res.blob();
         const processedImageUrl = URL.createObjectURL(blob);
@@ -60,10 +61,10 @@ function BackgroundRemoveComp() {
         setImageUrl(processedImageUrl); // Show processed image
       } else {
         const data = await res.json();
-        alert(data.message);
+        console.log(data);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     } finally {
       setLoading(false); // Stop loading effect
     }
