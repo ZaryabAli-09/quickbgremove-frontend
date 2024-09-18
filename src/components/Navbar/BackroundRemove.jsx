@@ -44,8 +44,11 @@ function BackgroundRemoveComp() {
     setLoading(true);
 
     try {
+      // const res = await fetch("http://13.233.153.197:4000api/tools/removebg", {
+      // const res = await fetch("https://quickbgremove.onrender.com/api/tools/removebg", {
+      // const res = await fetch("http://localhost:4000/api/tools/removebg", {
       const res = await fetch(
-        "https://quickbgremove.onrender.com/api/tools/removebg",
+        `${import.meta.env.VITE_API_URL}/api/tools/removebg`,
         {
           method: "POST",
           body: formData,
@@ -56,8 +59,10 @@ function BackgroundRemoveComp() {
       }
       if (res.ok) {
         const blob = await res.blob();
+        console.log(blob);
         const processedImageUrl = URL.createObjectURL(blob);
         setLocalImageDisplay(""); // Hide local image
+        console.log(processedImageUrl);
         setImageUrl(processedImageUrl); // Show processed image
       } else {
         const data = await res.json();
