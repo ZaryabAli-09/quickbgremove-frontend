@@ -5,4 +5,5 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   base: "/",
   plugins: [react()],
+  envPrefix: "VITE_", // Make sure VITE_ prefix is allowed
 });

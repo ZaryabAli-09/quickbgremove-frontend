@@ -28,7 +28,6 @@ function BackgroundRemoveComp() {
   // when choose file pop and we select an image we set the file to that image files data and create objecturl from it and locally display the image on screen this what handleFileinput does
   function handleFileInput(e) {
     setFile(e.target.files[0]);
-    console.log(e.target.files[0]);
     setLocalImageDisplay(URL.createObjectURL(e.target.files[0]));
   }
 
@@ -44,9 +43,6 @@ function BackgroundRemoveComp() {
     setLoading(true);
 
     try {
-      // const res = await fetch("http://13.233.153.197:4000api/tools/removebg", {
-      // const res = await fetch("https://quickbgremove.onrender.com/api/tools/removebg", {
-      // const res = await fetch("http://localhost:4000/api/tools/removebg", {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/tools/removebg`,
         {
@@ -59,14 +55,13 @@ function BackgroundRemoveComp() {
       }
       if (res.ok) {
         const blob = await res.blob();
-        console.log(blob);
+
         const processedImageUrl = URL.createObjectURL(blob);
         setLocalImageDisplay(""); // Hide local image
-        console.log(processedImageUrl);
+
         setImageUrl(processedImageUrl); // Show processed image
       } else {
         const data = await res.json();
-        console.log(data);
       }
     } catch (error) {
       console.log(error);
