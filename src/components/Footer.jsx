@@ -23,7 +23,7 @@ const Footer = () => {
         </Link>
 
         {/* Navigation Links */}
-        <nav className="flex space-x-6 text-xs md:text-base">
+        <nav className="flex space-x-6 text-xs md:sm">
           <Link to="/about" onClick={scrollToTop} className="hover:underline">
             About Us
           </Link>

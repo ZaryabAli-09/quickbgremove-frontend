@@ -24,7 +24,31 @@ const Navbar = () => {
           >
             Pricing
           </Link>
-          <div className="relative">
+          <Link
+            to="/"
+            className="block px-4 py-2 text-gray-700 font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
+          >
+            BG Remover
+          </Link>
+          <Link
+            to="/image-resizer"
+            className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
+          >
+            Image Resizer
+          </Link>
+          {/* <Link
+            to="/document-scanner"
+            className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
+          >
+            Document Scanner
+          </Link>
+          <Link
+            to="/batch-processing"
+            className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
+          >
+            Batch Processing
+          </Link> */}
+          {/* <div className="relative">
             <button
               onClick={() => setIsToolsMenuOpen(!isToolsMenuOpen)}
               className="text-gray-700 text-sm  hover:text-indigo-800 focus:outline-none font-bold"
@@ -43,6 +67,12 @@ const Navbar = () => {
                 BG Remover
               </Link>
               <Link
+                to="/image-resizer"
+                className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
+              >
+                Image Resizer
+              </Link>
+              <Link
                 to="/document-scanner"
                 className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
               >
@@ -54,14 +84,8 @@ const Navbar = () => {
               >
                 Batch Processing
               </Link>
-              <Link
-                to="/image-resizer"
-                className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
-              >
-                Image Resizer
-              </Link>
             </div>
-          </div>
+          </div> */}
           <Link
             to="/signup"
             className="px-4 py-2 text-sm font-bold bg-indigo-600 text-white rounded hover:bg-indigo-800 "
@@ -104,16 +128,12 @@ const Navbar = () => {
                 </Link>
               </button>
               <button
-                onClick={() => setIsToolsMenuOpen(!isToolsMenuOpen)}
+                // onClick={() => setIsToolsMenuOpen(!isToolsMenuOpen)}
                 className="w-full   hover:bg-gray-100 p-2 rounded text-left font-bold"
               >
                 Tools
               </button>
-              <div
-                className={`flex flex-col mt-2 ${
-                  isToolsMenuOpen ? "block" : "hidden"
-                }`}
-              >
+              <div className={`flex flex-col mt-2`}>
                 <Link
                   to="/"
                   className="block px-4 py-2 hover:bg-gray-100  hover:text-indigo-800 text-sm font-bold text-gray-700 "
@@ -121,6 +141,12 @@ const Navbar = () => {
                   BG Remover
                 </Link>
                 <Link
+                  to="/image-resizer"
+                  className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
+                >
+                  Image Resizer
+                </Link>
+                {/* <Link
                   to="/document-scanner"
                   className="block px-4 py-2 hover:bg-gray-100  hover:text-indigo-800 text-sm font-bold text-gray-700 "
                 >
@@ -131,13 +157,7 @@ const Navbar = () => {
                   className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
                 >
                   Batch Processing
-                </Link>
-                <Link
-                  to="/image-resizer"
-                  className="block px-4 py-2 text-gray-700  font-bold text-sm hover:text-indigo-800 hover:bg-gray-100"
-                >
-                  Image Resizer
-                </Link>
+                </Link> */}
               </div>
             </div>
             <Link

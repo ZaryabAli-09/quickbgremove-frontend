@@ -242,11 +242,11 @@ const ImageResizer = () => {
         </form>
       </div>
       {/* Responsive Pixel Chart */}
-      <div className="bg-white shadow-md border border-gray-100 rounded-lg p-4 w-full max-w-md mt-6 lg:mt-0 lg:ml-8">
-        <h2 className="text-xl font-bold text-gray-700 mb-4">
+      <div className="bg-gray-200 shadow-md border w-[90%] mx-auto mb-10  border-gray-300 rounded-lg p-4 flex flex-col justify-center items-center  ">
+        <h2 className="text-xl font-bold mb-4 text-gray-700">
           Image Size Guide
         </h2>
-        <table className="table-auto w-full">
+        <table className="table-auto text-gray-700 ">
           <thead>
             <tr>
               <th className="px-4 py-2">Platform</th>

@@ -1,9 +1,7 @@
 import React, { useState, useRef } from "react";
 import { BsArrowsMove } from "react-icons/bs";
-
 import image1 from "../../assets/11.webp";
 import image11 from "../../assets/1.webp";
-
 import image3 from "../../assets/33.webp";
 import image33 from "../../assets/3.webp";
 import image4 from "../../assets/44.webp";
