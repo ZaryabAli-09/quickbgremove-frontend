@@ -43,7 +43,7 @@ const ImageResizer = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:4000/api/tools/resizeImg",
+        `${import.meta.env.VITE_API_URL}/api/tools/resizeImg`,
         {
           method: "POST",
           body: formData,
