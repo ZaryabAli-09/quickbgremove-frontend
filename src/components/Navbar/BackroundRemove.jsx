@@ -3,7 +3,9 @@ import HeroVedio from "../../assets/hero1.mp4";
 import image1 from "../../assets/11.webp";
 import image3 from "../../assets/33.webp";
 import image4 from "../../assets/44.webp";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+// bug to be solve : when image is processed and return by server and then we click on try one of these image it donot reflect on ui and when we click on uload then automatically it reflects
 
 function BackgroundRemoveComp() {
   const scrollToTop = () => {
@@ -12,7 +14,7 @@ function BackgroundRemoveComp() {
       behavior: "smooth", // Optional: adds smooth scrolling
     });
   };
-  const navigate = useNavigate();
+
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [localImageDisplay, setLocalImageDisplay] = useState("");
@@ -27,8 +29,10 @@ function BackgroundRemoveComp() {
 
   // when choose file pop and we select an image we set the file to that image files data and create objecturl from it and locally display the image on screen this what handleFileinput does
   function handleFileInput(e) {
-    setFile(e.target.files[0]);
-    setLocalImageDisplay(URL.createObjectURL(e.target.files[0]));
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
+      setLocalImageDisplay(URL.createObjectURL(e.target.files[0]));
+    }
   }
 
   // this uploadFile logic runs when we click on background remove button we send file to server wheich then server remove bg from it and return the file which we then catch the file in blob and create url from it set image url to that blob generated url and hide the local image from screen
@@ -248,7 +252,7 @@ function BackgroundRemoveComp() {
             </button>
           ) : (
             <button
-              className="px-6 py-3 flex items-center hover:scale-105 ease-out duration-100 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-800 transition-colors"
+              className="px-6 py-3 flex items-center hover:scale-105 ease-out duration-100 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-800 transition-colors"
               onClick={handleDownload}
             >
               <svg
