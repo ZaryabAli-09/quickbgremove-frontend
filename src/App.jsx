@@ -17,7 +17,11 @@ import ImageResizer from "./pages/ImageResizer";
 import ReactGA from "react-ga";
 
 const TRACKING_ID = "G-W4WYP0GGL4"; //Google Analytics ID
-ReactGA.initialize(TRACKING_ID);
+ReactGA.initialize(TRACKING_ID, {
+  gaOptions: {
+    cookieDomain: "auto", // Automatically set the cookie domain
+  },
+});
 
 const usePageTracking = () => {
   const location = useLocation();
