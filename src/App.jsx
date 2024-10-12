@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "./index.css";
 import Navbar from "./components/Navbar/Navbar";
 import { Route, Routes } from "react-router-dom";
@@ -12,8 +14,23 @@ import DocumentScanner from "./pages/DocumentScanner";
 import SignUp from "./pages/Signup";
 import BatchProcessing from "./pages/BatchProcessing";
 import ImageResizer from "./pages/ImageResizer";
+import ReactGA from "react-ga";
+
+const TRACKING_ID = "G-W4WYP0GGL4"; //Google Analytics ID
+ReactGA.initialize(TRACKING_ID);
+
+const usePageTracking = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Send a page view to Google Analytics whenever the route changes
+    ReactGA.pageview(location.pathname + location.search);
+  }, [location]);
+};
 
 function App() {
+  usePageTracking(); // Custom hook to track page views
+
   return (
     <>
       <Navbar />
