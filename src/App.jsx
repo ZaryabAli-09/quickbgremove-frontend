@@ -23,29 +23,28 @@ ReactGA.initialize(TRACKING_ID, {
   },
 });
 
-const usePageTracking = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    // Send a page view to Google Analytics whenever the route changes
-    ReactGA.pageview(location.pathname + location.search);
-  }, [location]);
-};
-
 function App() {
-  usePageTracking(); // Custom hook to track page views
+  const usePageTracking = () => {
+    const location = useLocation();
 
-  useEffect(async () => {
-    const result = fetch("https://quickbgremove-backend.onrender.com")
-      .then((res) => res.json())
-      .then((data) => {
+    useEffect(() => {
+      // Send a page view to Google Analytics whenever the route changes
+      ReactGA.pageview(location.pathname + location.search);
+    }, [location]);
+  };
+  usePageTracking(); // Custom hook to track page views
+  useEffect(() => {
+    const checkBackend = async () => {
+      try {
+        const res = await fetch("https://quickbgremove-backend.onrender.com");
+        const data = await res.json();
         console.log("Backend is running", data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error connecting to backend:", error);
-      });
-    return result;
-  }, []); // Check backend connection on initial load
+      }
+    };
+    checkBackend();
+  }, []);
 
   return (
     <>
