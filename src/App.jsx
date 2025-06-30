@@ -35,6 +35,18 @@ const usePageTracking = () => {
 function App() {
   usePageTracking(); // Custom hook to track page views
 
+  useEffect(async () => {
+    const result = fetch("https://quickbgremove-backend.onrender.com")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Backend is running", data);
+      })
+      .catch((error) => {
+        console.error("Error connecting to backend:", error);
+      });
+    return result;
+  }, []); // Check backend connection on initial load
+
   return (
     <>
       <Navbar />
