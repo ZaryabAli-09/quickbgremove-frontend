@@ -3,7 +3,7 @@ import HeroVedio from "../../assets/hero1.mp4";
 import image1 from "../../assets/11.webp";
 import image3 from "../../assets/33.webp";
 import image4 from "../../assets/44.webp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // bug to be solve : when image is processed and return by server and then we click on try one of these image it donot reflect on ui and when we click on uload then automatically it reflects
 
@@ -15,6 +15,7 @@ function BackgroundRemoveComp() {
     });
   };
 
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [localImageDisplay, setLocalImageDisplay] = useState("");
@@ -24,81 +25,29 @@ function BackgroundRemoveComp() {
   // upload button click logic
   const handleButtonClick = () => {
     fileInputRef.current.click();
-    setImageUrl("");
   };
 
   // when choose file pop and we select an image we set the file to that image files data and create objecturl from it and locally display the image on screen this what handleFileinput does
   function handleFileInput(e) {
     if (e.target.files[0]) {
-      setFile(e.target.files[0]);
-      setLocalImageDisplay(URL.createObjectURL(e.target.files[0]));
+      navigate("/upload", { state: { file: e.target.files[0] } });
     }
   }
 
-  // this uploadFile logic runs when we click on background remove button we send file to server wheich then server remove bg from it and return the file which we then catch the file in blob and create url from it set image url to that blob generated url and hide the local image from screen
-  async function uploadFile() {
-    if (!file) {
-      return alert("Please choose an image");
-    }
-    const formData = new FormData();
-    formData.append("image", file);
-
-    // Start loading effect
-    setLoading(true);
-
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/tools/removebg`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      if (!res.ok) {
-        console.log(res);
-      }
-      if (res.ok) {
-        const blob = await res.blob();
-
-        const processedImageUrl = URL.createObjectURL(blob);
-        setLocalImageDisplay(""); // Hide local image
-
-        setImageUrl(processedImageUrl); // Show processed image
-      } else {
-        const data = await res.json();
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false); // Stop loading effect
-    }
-  }
-
+  // this function allow to drag file to uploader container
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
   // this logic simply allow to drag file to uploader container
   const handleDrop = (e) => {
     e.preventDefault();
     const droppedFile = e.dataTransfer.files[0];
     if (droppedFile && droppedFile.type.startsWith("image/")) {
-      setFile(droppedFile);
-      setLocalImageDisplay(URL.createObjectURL(droppedFile));
-      setImageUrl(""); // Reset processed image
+      navigate("/upload", { state: { file: droppedFile } });
     }
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
   };
 
   // download button logic
-  const handleDownload = () => {
-    if (!imageUrl) {
-      return alert("No image to download");
-    }
-    const link = document.createElement("a");
-    link.href = imageUrl;
-    link.download = "processed-image.png";
-    link.click();
-  };
 
   // this function convert the src which is render in the frontend to file deatils and then we set the file to send it to server for processing
   async function handleImageClick(e) {
@@ -110,15 +59,15 @@ function BackgroundRemoveComp() {
       const blob = await res.blob();
 
       const file = new File([blob], imageName, { type: blob.type });
-      setFile(file);
-      setLocalImageDisplay(src);
+
+      navigate("/upload", { state: { file: file } });
     } catch (err) {
       alert("Error converting image src to file");
     }
   }
   return (
     <div className="flex flex-col items-center justify-center p-4  lg:flex-row">
-      <div className="mt-3 flex flex-col items-center gap-4 justify-center lg:mt-6 ">
+      {/* <div className="mt-3 flex flex-col items-center gap-4 justify-center lg:mt-6 ">
         <div className="video-container">
           <video width={300} loop autoPlay muted className="rounded-xl">
             <source src={HeroVedio} type="video/mp4" />
@@ -134,7 +83,7 @@ function BackgroundRemoveComp() {
             Free
           </span>{" "}
         </p>
-      </div>
+      </div> */}
       <div className="flex flex-col items-center justify-center w-full max-w-lg">
         <input
           ref={fileInputRef}
@@ -228,7 +177,7 @@ function BackgroundRemoveComp() {
             .
           </p>
         </div>
-        {file &&
+        {/* {file &&
           (!imageUrl ? (
             <button
               className="px-6 py-3 flex items-center hover:scale-105 ease-out duration-100 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-800 transition-colors"
@@ -271,7 +220,7 @@ function BackgroundRemoveComp() {
               </svg>
               Download Image
             </button>
-          ))}
+          ))} */}
       </div>
     </div>
   );
