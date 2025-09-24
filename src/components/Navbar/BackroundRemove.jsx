@@ -67,7 +67,7 @@ function BackgroundRemoveComp() {
   }
   return (
     <div className="flex flex-col items-center justify-center p-4  lg:flex-row">
-      {/* <div className="mt-3 flex flex-col items-center gap-4 justify-center lg:mt-6 ">
+      <div className="mt-3 flex flex-col items-center gap-4 justify-center lg:mt-6 ">
         <div className="video-container">
           <video width={300} loop autoPlay muted className="rounded-xl">
             <source src={HeroVedio} type="video/mp4" />
@@ -83,7 +83,7 @@ function BackgroundRemoveComp() {
             Free
           </span>{" "}
         </p>
-      </div> */}
+      </div>
       <div className="flex flex-col items-center justify-center w-full max-w-lg">
         <input
           ref={fileInputRef}

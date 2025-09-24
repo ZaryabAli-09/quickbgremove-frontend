@@ -1,6 +1,7 @@
 import SliderComponent from "../components/Navbar/SliderComponent";
 import Desc from "../components/Navbar/Desc";
 import BackgroundRemoveComp from "../components/Navbar/BackroundRemove";
+import Footer from "../components/Footer";
 
 function Home() {
   return (
@@ -12,6 +13,7 @@ function Home() {
       <div className="flex items-center justify-center h-screen">
         <Desc />
       </div>
+      <Footer />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import Footer from "../components/Footer";
 
 const Contact = () => {
   return (
@@ -47,6 +48,7 @@ const Contact = () => {
           className="w-full h-[300px]"
         ></iframe>
       </section>
+      <Footer />
     </>
   );
 };

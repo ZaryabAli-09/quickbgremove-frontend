@@ -43,7 +43,6 @@ function App() {
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/image-resizer" element={<ImageResizer />}></Route>
       </Routes>
-      <Footer />
     </>
   );
 }
