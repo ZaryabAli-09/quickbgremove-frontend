@@ -5,13 +5,13 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfServices";
-import Footer from "./components/Footer";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
 import SignUp from "./pages/Signup";
 import ImageResizer from "./pages/ImageResizer";
 import Upload from "./pages/Upload";
-
+import { ColorWheelContext } from "./context/ColorWheelContext";
+import { Toaster } from "react-hot-toast";
 function App() {
   async function checkBackend() {
     try {
@@ -31,13 +31,20 @@ function App() {
 
   return (
     <>
+      <Toaster position="top-center" reverseOrder={false} />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/upload" element={<Upload />} />
+        <Route
+          path="/upload"
+          element={
+            <ColorWheelContext>
+              <Upload />
+            </ColorWheelContext>
+          }
+        />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
-
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<SignUp />}></Route>

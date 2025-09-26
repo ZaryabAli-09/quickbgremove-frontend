@@ -1,18 +1,34 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import ColorWheel from "../components/ColorWheel";
+import { useColorWheel } from "../context/ColorWheelContext";
+import { hsvaToHex } from "@uiw/color-convert";
+import ImageCanvas from "../components/ImageCanvas";
+import { toast } from "react-hot-toast";
+// convert to hex
 
 const Upload = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const fileFromState = location.state?.file;
   const fileInputRef = useRef(null);
 
   const [file, setFile] = useState(null);
+  const [originalBgRemoveImage, setOriginalBgRemoveImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
+  const [editBlob, setEditBlob] = useState(null);
   const [localImageDisplay, setLocalImageDisplay] = useState("");
+  const [isImageEnhanced, setIsImageEnhanced] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   const [activeTab, setActiveTab] = useState("");
+  const [bgActiveTab, setBgActiveTab] = useState("photo");
+
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  const [isColorWheelOpen, setIsColorWheelOpen] = useState(false);
+  const { hsva } = useColorWheel();
 
   // Background removal logic
   const removeBackground = async (file) => {
@@ -35,10 +51,11 @@ const Upload = () => {
       if (!res.ok) throw new Error(`Server error: ${res.status}`);
 
       const blob = await res.blob();
+      setEditBlob(blob);
       const processedImageUrl = URL.createObjectURL(blob);
-
       setLocalImageDisplay("");
       setImageUrl(processedImageUrl);
+      setOriginalBgRemoveImage({ blob, url: processedImageUrl });
     } catch (err) {
       console.error("Background removal error:", err);
       setError(err.message || "Failed to remove background. Please try again.");
@@ -57,6 +74,10 @@ const Upload = () => {
       setLocalImageDisplay(URL.createObjectURL(newFile));
       removeBackground(newFile);
     }
+    navigate(".", {
+      replace: true,
+      state: { ...location.state, file: newFile },
+    });
   };
 
   // Trigger hidden input
@@ -67,7 +88,7 @@ const Upload = () => {
     if (!imageUrl) return setError("No image available for download");
     const link = document.createElement("a");
     link.href = imageUrl;
-    link.download = `background-removed-${Date.now()}.png`;
+    link.download = `quickbgremove-${Date.now()}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -84,6 +105,54 @@ const Upload = () => {
     setIsSidePanelOpen(false);
   };
 
+  async function handleUpscaleImg() {
+    setLoading(true);
+
+    if (isImageEnhanced) {
+      setImageUrl(originalBgRemoveImage.url);
+      setEditBlob(originalBgRemoveImage.blob);
+      setIsImageEnhanced(false);
+      setLoading(false);
+      return;
+    }
+    if (!imageUrl || !editBlob) {
+      toast.error("No image available for enhancement.");
+      setLoading(false);
+
+      return;
+    }
+
+    const formData = new FormData();
+    const ext = editBlob.type?.split("/")[1] || "png";
+    formData.append("image", editBlob, `processedImage.${ext}`);
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/tools/upscaleImg`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      console.log(response);
+      if (!response.ok) {
+        toast.error("Failed to enhance image.");
+        return;
+      }
+
+      const blob = await response.blob();
+      setEditBlob(blob);
+      const url = URL.createObjectURL(blob);
+      setImageUrl(url);
+      setIsImageEnhanced(true);
+    } catch (error) {
+      toast.error("Failed to enhance image.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     if (fileFromState) {
       setFile(fileFromState);
@@ -95,7 +164,7 @@ const Upload = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       {/* Responsive Navbar */}
-      <nav className="max-w-xl mx-auto mb-8">
+      <nav className="max-w-xl mx-auto mb-8 ">
         <div className="bg-white rounded-full  border border-gray-200 p-2">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative">
             {/* Tabs */}
@@ -111,24 +180,14 @@ const Upload = () => {
                 Background
               </button>
               <button
-                onClick={() => handleTabClick("upscale")}
+                onClick={() => handleTabClick("effects")}
                 className={`px-2 py-2 rounded-full font-semibold text-sm  transition-all duration-200 ${
-                  activeTab === "upscale"
+                  activeTab === "effects"
                     ? "bg-gray-100 text-gray-500 shadow-sm"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
-                Upscale
-              </button>
-              <button
-                onClick={() => handleTabClick("resize")}
-                className={`px-2 py-2 rounded-full font-semibold text-sm  transition-all duration-200 ${
-                  activeTab === "resize"
-                    ? "bg-gray-100 text-gray-500 shadow-sm"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-              >
-                Resize
+                Effects
               </button>
             </div>
 
@@ -156,10 +215,10 @@ const Upload = () => {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row-reverse gap-2">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row-reverse gap-2">
         {/* Side Panel */}
         {isSidePanelOpen && (
-          <div className="lg:w-80 bg-white  border border-gray-200 rounded-md p-4  h-fit">
+          <div className="lg:min-w-80 lg:w-80 bg-white  border border-gray-200 rounded-md p-4  h-fit">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-800 capitalize">
                 {activeTab} Settings
@@ -187,19 +246,87 @@ const Upload = () => {
             <div className="space-y-4">
               {activeTab === "background" && (
                 <div className="text-gray-600">
-                  <p>Background removal settings will appear here.</p>
+                  <div className="flex justify-center gap-3 items-center  bg-white  border border-gray-200  w-fit mx-auto px-3 py-2 rounded-full">
+                    <div
+                      className={`${
+                        bgActiveTab === "color" &&
+                        "bg-gray-200 px-2 py-1 rounded-full text-xs font-semibold "
+                      } px-2 py-1 rounded-full text-xs font-semibold cursor-pointer`}
+                      onClick={() => {
+                        setBgActiveTab("color");
+                        setIsColorWheelOpen(true);
+                      }}
+                    >
+                      Color
+                    </div>
+                    <div
+                      className={`${
+                        bgActiveTab === "photo" &&
+                        "bg-gray-200 px-2 py-1 rounded-full text-xs font-semibold "
+                      } px-2 py-1 rounded-full text-xs font-semibold cursor-pointer`}
+                      onClick={() => {
+                        setBgActiveTab("photo");
+                      }}
+                    >
+                      Photo
+                    </div>
+
+                    <div
+                      className={`${
+                        bgActiveTab === "magic" &&
+                        "bg-gray-200 px-2 py-1 rounded-full text-xs font-semibold "
+                      } px-2 py-1 rounded-full text-xs font-semibold cursor-pointer`}
+                      onClick={() => {
+                        setBgActiveTab("magic");
+                      }}
+                    >
+                      Magic
+                    </div>
+                  </div>
+                  {bgActiveTab === "photo" && (
+                    <div className="p-10">photo settings</div>
+                  )}
+                  {bgActiveTab === "color" && (
+                    <div className="p-10">
+                      <button
+                        className="border p-4 rounded text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                        onClick={() => {
+                          setIsColorWheelOpen(false);
+                        }}
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3ZM5 12C5 8.13401 8.13401 5 12 5C13.5725 5 15.0239 5.51851 16.1925 6.39389L6.39389 16.1925C5.51851 15.0239 5 13.5725 5 12ZM7.80819 17.6067C8.97671 18.4817 10.4278 19 12 19C15.866 19 19 15.866 19 12C19 10.4278 18.4817 8.97671 17.6067 7.80819L7.80819 17.6067Z"
+                            fill="currentColor"
+                          ></path>
+                        </svg>
+                      </button>
+                      <div onClick={() => setIsColorWheelOpen(true)}>
+                        {" "}
+                        <ColorWheel />
+                      </div>
+                    </div>
+                  )}
+                  {bgActiveTab === "magic" && <div className="p-10">magic</div>}
                 </div>
               )}
 
-              {activeTab === "upscale" && (
+              {activeTab === "effects" && (
                 <div className="text-gray-600">
-                  <p>Upscale settings will appear here.</p>
-                </div>
-              )}
-
-              {activeTab === "resize" && (
-                <div className="text-gray-600">
-                  <p>Resize settings will appear here.</p>
+                  <button
+                    onClick={handleUpscaleImg}
+                    className=" px-4 py-2 bg-blue-500 text-white rounded-full font-medium hover:bg-blue-600 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2 text-sm"
+                  >
+                    {isImageEnhanced ? "Enhanced" : "Enhance"}
+                  </button>
                 </div>
               )}
             </div>
@@ -222,52 +349,14 @@ const Upload = () => {
           />
 
           {/* Image Preview Container */}
-          <div className="bg-white rounded-2xl  p-6 mb-8 border border-gray-200">
-            <div
-              className={`relative w-full h-96 border border-dashed border-gray-300 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                loading ? "bg-gray-50" : "bg-white"
-              }`}
-            >
-              {loading ? (
-                <div className="flex flex-col items-center">
-                  <div className="relative">
-                    <div className="w-16 h-16 border-4 border-blue-200 rounded-full"></div>
-                    <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin absolute top-0"></div>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-4 text-center max-w-xs">
-                    <span className="font-semibold text-blue-600">
-                      QuickBgRemove
-                    </span>{" "}
-                    is processing your image...
-                  </p>
-                </div>
-              ) : localImageDisplay || imageUrl ? (
-                <img
-                  loading="lazy"
-                  className="w-full h-full object-contain rounded-lg"
-                  src={imageUrl || localImageDisplay}
-                  alt="Processed preview"
-                />
-              ) : (
-                <div className="text-center text-gray-400">
-                  <svg
-                    className="w-16 h-16 mx-auto mb-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <p>Upload an image to get started</p>
-                </div>
-              )}
-            </div>
-          </div>
+          <ImageCanvas
+            imageUrl={imageUrl}
+            localImageDisplay={localImageDisplay}
+            loading={loading}
+            isColorWheelOpen={isColorWheelOpen}
+            hsvaToHex={hsvaToHex}
+            hsva={hsva}
+          />
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -293,13 +382,6 @@ const Upload = () => {
               </svg>
             </button>
           </div>
-
-          {/* Error Message */}
-          {error && (
-            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-center">
-              {error}
-            </div>
-          )}
         </div>
       </div>
     </div>
