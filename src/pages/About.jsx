@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IoPerson } from "react-icons/io5";
 import Footer from "../components/Footer";
@@ -23,7 +22,7 @@ const About = () => {
             continuously improving our service to meet the evolving needs of our
             users, ensuring a seamless and reliable experience every time.
           </p>
-          <Link to={"https://zaryab-ali.netlify.app"}>
+          <Link to={"https://zaryabali.vercel.app"}>
             <span className="bg-indigo-200 text-black font-bold p-2 relative top-3 opacity-50 hover:scale-110 rounded-lg flex w-fit items-center gap-2">
               ~Zaryab Ali <IoPerson className="text-lg  " />
             </span>

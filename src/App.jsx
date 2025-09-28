@@ -25,19 +25,24 @@ function App() {
     }
   }
 
+  // spinning up the backend as iam using free tier of render
   useEffect(() => {
     checkBackend();
   }, []);
 
   return (
     <>
+      {/* toaster from react hot toast  */}
       <Toaster position="top-center" reverseOrder={false} />
+      {/* navbar component  */}
       <Navbar />
+      {/* all routes  */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
           path="/upload"
           element={
+            // color wheel context wrapper
             <ColorWheelContext>
               <Upload />
             </ColorWheelContext>

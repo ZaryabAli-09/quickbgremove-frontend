@@ -5,9 +5,10 @@ export default function ImageCanvas({
   imageUrl,
   localImageDisplay,
   loading,
-  isColorWheelOpen,
   hsvaToHex,
   hsva,
+  selectedBgImage,
+  bgColor,
 }) {
   const [aspectRatio, setAspectRatio] = useState(null);
 
@@ -25,7 +26,16 @@ export default function ImageCanvas({
     <div className=" bg-white rounded-2xl p-6 mb-8 border border-gray-200 ">
       <div
         style={{
-          ...(isColorWheelOpen ? { backgroundColor: hsvaToHex(hsva) } : {}),
+          ...(selectedBgImage
+            ? {
+                backgroundImage: `url(${selectedBgImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }
+            : {}),
+
+          ...(bgColor ? { backgroundColor: hsvaToHex(hsva) } : {}),
           ...(aspectRatio ? { aspectRatio } : { height: "24rem" }),
           maxWidth: "100%", // don’t exceed parent’s width
           maxHeight: "60%", // don’t exceed 80% of screen height

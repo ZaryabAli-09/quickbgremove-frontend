@@ -1,3 +1,4 @@
+// Upload.jsx
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ColorWheel from "../components/ColorWheel";
@@ -5,40 +6,93 @@ import { useColorWheel } from "../context/ColorWheelContext";
 import { hsvaToHex } from "@uiw/color-convert";
 import ImageCanvas from "../components/ImageCanvas";
 import { toast } from "react-hot-toast";
-// convert to hex
 
 const Upload = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fileFromState = location.state?.file;
+
   const fileInputRef = useRef(null);
+  const uploadPhotoRef = useRef(null);
 
+  // States
   const [file, setFile] = useState(null);
-  const [originalBgRemoveImage, setOriginalBgRemoveImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
-  const [editBlob, setEditBlob] = useState(null);
   const [localImageDisplay, setLocalImageDisplay] = useState("");
-  const [isImageEnhanced, setIsImageEnhanced] = useState(false);
+  const [editBlob, setEditBlob] = useState(null);
+  const [originalBgRemoveImage, setOriginalBgRemoveImage] = useState(null);
 
+  const [isImageEnhanced, setIsImageEnhanced] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const [activeTab, setActiveTab] = useState("");
   const [bgActiveTab, setBgActiveTab] = useState("photo");
-
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
-  const [isColorWheelOpen, setIsColorWheelOpen] = useState(false);
+
+  const [selectedBgImage, setSelectedBgImage] = useState(null);
+  const [bgColor, setBgColor] = useState(null);
+
   const { hsva } = useColorWheel();
+  const [unsplashImages, setUnsplashImages] = useState([]);
+
+  // Fetch images from Unsplash API
+  async function getImagesFromUnsplash() {
+    try {
+      const response = await fetch(
+        "https://api.unsplash.com/photos?per_page=10&page=1",
+        {
+          headers: {
+            Authorization: `Client-ID ${
+              import.meta.env.VITE_UNSPLASH_API_ACCESS_KEY
+            }`,
+            "Accept-Version": "v1",
+          },
+        }
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        toast.error("Error fetching Unsplash images.");
+        return;
+      }
+      setUnsplashImages([...result]);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+  useEffect(() => {
+    getImagesFromUnsplash();
+  }, []);
+
+  // Handle photo upload to add into bg gallery
+  function handlePhotoUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+      setUnsplashImages([
+        { id: Date.now(), urls: { small_s3: URL.createObjectURL(file) } },
+        ...unsplashImages,
+      ]);
+    }
+  }
+
+  // Handle new file selection for main image
+  const handleFileChange = (e) => {
+    const newFile = e.target.files[0];
+    if (newFile) {
+      setFile(newFile);
+      setImageUrl("");
+      setLocalImageDisplay(URL.createObjectURL(newFile));
+      removeBackground(newFile);
+    }
+    navigate(".", { replace: true, state: { file: newFile } });
+  };
 
   // Background removal logic
   const removeBackground = async (file) => {
-    if (!file) return setError("Please choose an image");
-    if (!file.type.startsWith("image/"))
-      return setError("Please select a valid image file");
+    if (!file || !file.type.startsWith("image/")) return;
 
     setLoading(true);
-    setError("");
-
     try {
       const formData = new FormData();
       formData.append("image", file);
@@ -49,62 +103,20 @@ const Upload = () => {
       );
 
       if (!res.ok) throw new Error(`Server error: ${res.status}`);
-
       const blob = await res.blob();
-      setEditBlob(blob);
+
       const processedImageUrl = URL.createObjectURL(blob);
-      setLocalImageDisplay("");
+      setEditBlob(blob);
       setImageUrl(processedImageUrl);
       setOriginalBgRemoveImage({ blob, url: processedImageUrl });
     } catch (err) {
-      console.error("Background removal error:", err);
-      setError(err.message || "Failed to remove background. Please try again.");
+      toast.error("Failed to remove background.");
     } finally {
       setLoading(false);
     }
   };
 
-  // File change
-  const handleFileChange = (e) => {
-    const newFile = e.target.files[0];
-    if (newFile) {
-      setFile(newFile);
-      setImageUrl("");
-      setError("");
-      setLocalImageDisplay(URL.createObjectURL(newFile));
-      removeBackground(newFile);
-    }
-    navigate(".", {
-      replace: true,
-      state: { ...location.state, file: newFile },
-    });
-  };
-
-  // Trigger hidden input
-  const handleUploadAnother = () => fileInputRef.current?.click();
-
-  // Download file
-  const handleDownload = () => {
-    if (!imageUrl) return setError("No image available for download");
-    const link = document.createElement("a");
-    link.href = imageUrl;
-    link.download = `quickbgremove-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  // Handle tab click
-  const handleTabClick = (tabName) => {
-    setActiveTab(tabName);
-    setIsSidePanelOpen(true);
-  };
-
-  // Close side panel
-  const handleCloseSidePanel = () => {
-    setIsSidePanelOpen(false);
-  };
-
+  // Image enhancement / reset
   async function handleUpscaleImg() {
     setLoading(true);
 
@@ -115,44 +127,37 @@ const Upload = () => {
       setLoading(false);
       return;
     }
-    if (!imageUrl || !editBlob) {
-      toast.error("No image available for enhancement.");
-      setLoading(false);
 
+    if (!imageUrl || !editBlob) {
+      toast.error("No image to enhance.");
+      setLoading(false);
       return;
     }
 
     const formData = new FormData();
-    const ext = editBlob.type?.split("/")[1] || "png";
-    formData.append("image", editBlob, `processedImage.${ext}`);
+    formData.append("image", editBlob, `processedImage.png`);
 
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/tools/upscaleImg`,
-        {
-          method: "POST",
-          body: formData,
-        }
+        { method: "POST", body: formData }
       );
 
-      console.log(response);
-      if (!response.ok) {
-        toast.error("Failed to enhance image.");
-        return;
-      }
-
+      if (!response.ok) throw new Error("Enhancement failed.");
       const blob = await response.blob();
-      setEditBlob(blob);
+
       const url = URL.createObjectURL(blob);
+      setEditBlob(blob);
       setImageUrl(url);
       setIsImageEnhanced(true);
-    } catch (error) {
+    } catch {
       toast.error("Failed to enhance image.");
     } finally {
       setLoading(false);
     }
   }
 
+  // Reset on state file
   useEffect(() => {
     if (fileFromState) {
       setFile(fileFromState);
@@ -161,225 +166,258 @@ const Upload = () => {
     }
   }, [fileFromState]);
 
-  return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
-      {/* Responsive Navbar */}
-      <nav className="max-w-xl mx-auto mb-8 ">
-        <div className="bg-white rounded-full  border border-gray-200 p-2">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative">
-            {/* Tabs */}
-            <div className="flex  gap-2 justify-center ">
-              <button
-                onClick={() => handleTabClick("background")}
-                className={`px-2 py-2 rounded-full font-semibold text-sm  transition-all duration-200 ${
-                  activeTab === "background"
-                    ? "bg-gray-100 text-gray-500 shadow-sm"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-              >
-                Background
-              </button>
-              <button
-                onClick={() => handleTabClick("effects")}
-                className={`px-2 py-2 rounded-full font-semibold text-sm  transition-all duration-200 ${
-                  activeTab === "effects"
-                    ? "bg-gray-100 text-gray-500 shadow-sm"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-              >
-                Effects
-              </button>
-            </div>
+  async function handleDownload() {
+    try {
+      const formData = new FormData();
 
-            {/* Download Button */}
+      if (!editBlob) {
+        toast.error("No image to download.");
+        return;
+      }
+      // Case 1: No background applied → just download the main image
+      if (imageUrl && !bgColor && !selectedBgImage) {
+        const link = document.createElement("a");
+        link.href = imageUrl;
+        link.download = `quickbgremove-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        return;
+      }
+      // Always send processed image blob
+      formData.append("image", editBlob, "processedImage.png");
+
+      // Case 2: Background color applied
+      if (bgColor && !selectedBgImage) {
+        formData.append("bgColor", bgColor);
+      }
+      if (selectedBgImage) {
+        // If it’s a URL, let backend handle it
+        if (
+          typeof selectedBgImage === "string" &&
+          selectedBgImage.startsWith("http")
+        ) {
+          const image = unsplashImages.find(
+            (img) => img.urls.small_s3 === selectedBgImage
+          );
+          formData.append("bgImageUrl", image.urls.full);
+        } else {
+          // If it’s a locally uploaded file (blob URL from File input)
+          const bgBlob = await fetch(selectedBgImage).then((res) => res.blob());
+          formData.append("bgImage", bgBlob, "bgImage.png");
+        }
+      }
+
+      console.log(formData.entries());
+      // Send to backend
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/tools/mergingBgEdits`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        toast.error("Failed to download image.");
+        return;
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = `quickbgremove-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl); // cleanup
+    } catch (error) {
+      toast.error("Failed to download image.");
+      console.error("Download failed:", error);
+    }
+  }
+  return (
+    <div className="min-h-screen bg-gray-100 py-6 px-3 sm:px-6 lg:px-8">
+      {/* Top navbar */}
+      <nav className="max-w-2xl mx-auto mb-6">
+        <div className="bg-white rounded-full border border-gray-200 p-2">
+          <div className="flex flex-wrap items-center justify-center gap-3 relative">
+            {/* Tabs */}
+            <button
+              onClick={() => {
+                setActiveTab("background");
+                setIsSidePanelOpen(true);
+              }}
+              className={`px-3 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                activeTab === "background"
+                  ? "bg-gray-100 text-gray-700 shadow-sm"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              Background
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab("effects");
+                setIsSidePanelOpen(true);
+              }}
+              className={`px-3 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                activeTab === "effects"
+                  ? "bg-gray-100 text-gray-700 shadow-sm"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              Effects
+            </button>
+
+            {/* Download button */}
             <button
               onClick={handleDownload}
-              className="absolute top-0 right-1 px-4 py-2 bg-blue-500 text-white rounded-full font-medium hover:bg-blue-600 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2 text-sm"
+              className="absolute top-0 right-2 px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium shadow hover:bg-blue-600 transition"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
               Download
             </button>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row-reverse gap-2">
-        {/* Side Panel */}
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-4">
+        {/* Side panel */}
         {isSidePanelOpen && (
-          <div className="lg:min-w-80 lg:w-80 bg-white  border border-gray-200 rounded-md p-4  h-fit">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-800 capitalize">
-                {activeTab} Settings
-              </h3>
-              <button
-                onClick={handleCloseSidePanel}
-                className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {activeTab === "background" && (
-                <div className="text-gray-600">
-                  <div className="flex justify-center gap-3 items-center  bg-white  border border-gray-200  w-fit mx-auto px-3 py-2 rounded-full">
-                    <div
-                      className={`${
-                        bgActiveTab === "color" &&
-                        "bg-gray-200 px-2 py-1 rounded-full text-xs font-semibold "
-                      } px-2 py-1 rounded-full text-xs font-semibold cursor-pointer`}
-                      onClick={() => {
-                        setBgActiveTab("color");
-                        setIsColorWheelOpen(true);
-                      }}
-                    >
-                      Color
-                    </div>
-                    <div
-                      className={`${
-                        bgActiveTab === "photo" &&
-                        "bg-gray-200 px-2 py-1 rounded-full text-xs font-semibold "
-                      } px-2 py-1 rounded-full text-xs font-semibold cursor-pointer`}
-                      onClick={() => {
-                        setBgActiveTab("photo");
-                      }}
-                    >
-                      Photo
-                    </div>
-
-                    <div
-                      className={`${
-                        bgActiveTab === "magic" &&
-                        "bg-gray-200 px-2 py-1 rounded-full text-xs font-semibold "
-                      } px-2 py-1 rounded-full text-xs font-semibold cursor-pointer`}
-                      onClick={() => {
-                        setBgActiveTab("magic");
-                      }}
-                    >
-                      Magic
-                    </div>
-                  </div>
-                  {bgActiveTab === "photo" && (
-                    <div className="p-10">photo settings</div>
-                  )}
-                  {bgActiveTab === "color" && (
-                    <div className="p-10">
-                      <button
-                        className="border p-4 rounded text-gray-600 hover:text-gray-800 transition-colors duration-200"
-                        onClick={() => {
-                          setIsColorWheelOpen(false);
-                        }}
-                      >
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3ZM5 12C5 8.13401 8.13401 5 12 5C13.5725 5 15.0239 5.51851 16.1925 6.39389L6.39389 16.1925C5.51851 15.0239 5 13.5725 5 12ZM7.80819 17.6067C8.97671 18.4817 10.4278 19 12 19C15.866 19 19 15.866 19 12C19 10.4278 18.4817 8.97671 17.6067 7.80819L7.80819 17.6067Z"
-                            fill="currentColor"
-                          ></path>
-                        </svg>
-                      </button>
-                      <div onClick={() => setIsColorWheelOpen(true)}>
-                        {" "}
-                        <ColorWheel />
-                      </div>
-                    </div>
-                  )}
-                  {bgActiveTab === "magic" && <div className="p-10">magic</div>}
-                </div>
-              )}
-
-              {activeTab === "effects" && (
-                <div className="text-gray-600">
-                  <button
-                    onClick={handleUpscaleImg}
-                    className=" px-4 py-2 bg-blue-500 text-white rounded-full font-medium hover:bg-blue-600 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2 text-sm"
+          <div className="lg:w-80 bg-white border border-gray-200 rounded-lg p-4">
+            {activeTab === "background" && (
+              <div>
+                {/* Tabs for bg options */}
+                <div className="flex justify-center gap-3 mb-4">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs cursor-pointer ${
+                      bgActiveTab === "color" && "bg-gray-200 font-semibold"
+                    }`}
+                    onClick={() => {
+                      setBgActiveTab("color");
+                    }}
                   >
-                    {isImageEnhanced ? "Enhanced" : "Enhance"}
-                  </button>
+                    Color
+                  </span>
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs cursor-pointer ${
+                      bgActiveTab === "photo" && "bg-gray-200 font-semibold"
+                    }`}
+                    onClick={() => {
+                      setBgActiveTab("photo");
+                    }}
+                  >
+                    Photo
+                  </span>
                 </div>
-              )}
-            </div>
+
+                {/* Bg selection */}
+                {bgActiveTab === "photo" && (
+                  <div className="grid grid-cols-3 gap-2">
+                    <div
+                      onClick={() => setSelectedBgImage(null)}
+                      className="w-20 h-20 flex items-center justify-center border rounded-md text-gray-400 cursor-pointer"
+                    >
+                      None
+                    </div>
+                    <div
+                      onClick={() => uploadPhotoRef.current.click()}
+                      className="w-20 h-20 flex items-center justify-center border rounded-md text-3xl text-gray-400 cursor-pointer"
+                    >
+                      +
+                    </div>
+                    <input
+                      type="file"
+                      ref={uploadPhotoRef}
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoUpload}
+                    />
+                    {unsplashImages.map((img) => (
+                      <img
+                        key={img.id}
+                        src={img.urls.small_s3 || img.urls.small}
+                        alt=""
+                        className="w-20 h-20 object-cover rounded-md cursor-pointer hover:opacity-80"
+                        onClick={() => {
+                          setSelectedBgImage(
+                            img.urls.small_s3 || img.urls.small
+                          );
+                          setBgColor(null);
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {bgActiveTab === "color" && (
+                  <div className="mt-4">
+                    <div
+                      onClick={() => setBgColor(null)}
+                      className="w-20 h-20 flex items-center justify-center border rounded-md text-gray-400 cursor-pointer"
+                    >
+                      None
+                    </div>
+                    <ColorWheel />
+                    <button
+                      onClick={() => {
+                        setBgColor(hsvaToHex(hsva));
+                        setSelectedBgImage(null);
+                      }}
+                      className="mt-3 px-3 py-2 rounded bg-gray-200 text-sm"
+                    >
+                      Apply Color
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === "effects" && (
+              <button
+                onClick={handleUpscaleImg}
+                className={`w-full px-4 py-2 rounded-full font-medium shadow transition ${
+                  isImageEnhanced
+                    ? "bg-gradient-to-r from-green-400 to-emerald-500 text-white animate-pulse"
+                    : "bg-blue-500 text-white hover:bg-blue-600"
+                }`}
+              >
+                {isImageEnhanced ? "✨ Enhanced" : "Enhance"}
+              </button>
+            )}
           </div>
         )}
 
-        {/* Main Content */}
-        <div
-          className={`flex-1 ${
-            isSidePanelOpen ? "lg:max-w-2xl" : "max-w-2xl"
-          } mx-auto`}
-        >
-          {/* Hidden input */}
+        {/* Main image preview */}
+        <div className="flex-1 max-w-3xl mx-auto">
           <input
             type="file"
             ref={fileInputRef}
-            onChange={handleFileChange}
             accept="image/*"
             className="hidden"
+            onChange={handleFileChange}
           />
 
-          {/* Image Preview Container */}
           <ImageCanvas
+            selectedBgImage={selectedBgImage}
+            bgColor={bgColor}
             imageUrl={imageUrl}
             localImageDisplay={localImageDisplay}
             loading={loading}
-            isColorWheelOpen={isColorWheelOpen}
-            hsvaToHex={hsvaToHex}
             hsva={hsva}
+            hsvaToHex={hsvaToHex}
           />
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          {/* Upload another button */}
+          <div className="flex justify-center mt-4">
             <button
-              onClick={handleUploadAnother}
-              className="group rounded-xl overflow-hidden select-none h-12 w-12 flex items-center justify-center transition-all duration-200 ease-out active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white hover:bg-gray-50 border-2 border-dashed border-gray-300 hover:border-blue-400 shadow-sm hover:shadow-md"
-              title="Upload another image"
+              onClick={() => fileInputRef.current.click()}
+              className="h-12 w-12 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-400 hover:border-blue-400 bg-white shadow-sm hover:shadow-md transition"
+              title="Upload another"
             >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="text-gray-600 group-hover:text-blue-600 transition-colors duration-200"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M11.25 11.25V5C11.25 4.58579 11.5858 4.25 12 4.25C12.4142 4.25 12.75 4.58579 12.75 5V11.25H19C19.4142 11.25 19.75 11.5858 19.75 12C19.75 12.4142 19.4142 12.75 19 12.75H12.75V19C12.75 19.4142 12.4142 19.75 12 19.75C11.5858 19.75 11.25 19.4142 11.25 19V12.75H5C4.58579 12.75 4.25 12.4142 4.25 12C4.25 11.5858 4.58579 11.25 5 11.25H11.25Z"
-                  fill="currentColor"
-                />
-              </svg>
+              +
             </button>
           </div>
         </div>
