@@ -243,7 +243,7 @@ const Upload = () => {
       {/* Top navbar */}
       <nav className="max-w-2xl mx-auto mb-6">
         <div className="bg-white rounded-full border border-gray-200 p-2">
-          <div className="flex flex-wrap items-center justify-center gap-3 relative">
+          <div className="flex flex-wrap items-center justify-start md:justify-center gap-2 relative">
             {/* Tabs */}
             <button
               onClick={() => {
@@ -275,7 +275,7 @@ const Upload = () => {
             {/* Download button */}
             <button
               onClick={handleDownload}
-              className="absolute top-0 right-2 px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium shadow hover:bg-blue-600 transition"
+              className="absolute right-0 md:absolute md:top-0 md:right-2 px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium shadow hover:bg-blue-600 transition"
             >
               Download
             </button>
@@ -283,16 +283,19 @@ const Upload = () => {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-4">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-4 relative">
         {/* Side panel */}
         {isSidePanelOpen && (
-          <div className="lg:w-80 bg-white border border-gray-200 rounded-lg p-4">
+          <div
+            className="w-[80%] mx-auto lg:w-80 bg-white border border-gray-200 rounded-lg p-4
+                max-h-[80vh] md:max-h-[60vh] overflow-hidden "
+          >
             {activeTab === "background" && (
               <div>
                 {/* Tabs for bg options */}
                 <div className="flex justify-center gap-3 mb-4">
                   <span
-                    className={`px-3 py-1 rounded-full text-xs cursor-pointer ${
+                    className={`px-3   py-1 rounded-full text-xs cursor-pointer ${
                       bgActiveTab === "color" && "bg-gray-200 font-semibold"
                     }`}
                     onClick={() => {
@@ -315,16 +318,16 @@ const Upload = () => {
 
                 {/* Bg selection */}
                 {bgActiveTab === "photo" && (
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-4 md:grid-cols-3 gap-2 h-auto md:h-96 overflow-hidden overflow-y-scroll">
                     <div
                       onClick={() => setSelectedBgImage(null)}
-                      className="w-20 h-20 flex items-center justify-center border rounded-md text-gray-400 cursor-pointer"
+                      className="w-12 h-12 sm:w-20 sm:h-20 flex items-center justify-center border rounded-md text-gray-400 cursor-pointer"
                     >
                       None
                     </div>
                     <div
                       onClick={() => uploadPhotoRef.current.click()}
-                      className="w-20 h-20 flex items-center justify-center border rounded-md text-3xl text-gray-400 cursor-pointer"
+                      className="w-12 h-12 sm:w-20 sm:h-20 flex items-center justify-center border rounded-md text-3xl text-gray-400 cursor-pointer"
                     >
                       +
                     </div>
@@ -340,7 +343,7 @@ const Upload = () => {
                         key={img.id}
                         src={img.urls.small_s3 || img.urls.small}
                         alt=""
-                        className="w-20 h-20 object-cover rounded-md cursor-pointer hover:opacity-80"
+                        className="w-12 h-12 sm:w-20 sm:h-20  object-cover rounded-md cursor-pointer hover:opacity-80"
                         onClick={() => {
                           setSelectedBgImage(
                             img.urls.small_s3 || img.urls.small
@@ -354,22 +357,38 @@ const Upload = () => {
 
                 {bgActiveTab === "color" && (
                   <div className="mt-4">
-                    <div
-                      onClick={() => setBgColor(null)}
-                      className="w-20 h-20 flex items-center justify-center border rounded-md text-gray-400 cursor-pointer"
-                    >
-                      None
+                    {/* Scrollable container */}
+                    <div className="h-80 overflow-y-auto pr-2">
+                      {/* Sticky top bar with controls */}
+                      <div className="sticky top-0 bg-white z-10 py-2 border-b flex flex-wrap items-center gap-2">
+                        {/* None option */}
+                        <button
+                          onClick={() => {
+                            setBgColor(null);
+                            setSelectedBgImage(null);
+                          }}
+                          className="w-12 h-12 flex items-center justify-center border rounded-md text-sm text-gray-600 hover:bg-gray-100"
+                        >
+                          None
+                        </button>
+
+                        {/* Apply button (always visible in sticky bar) */}
+                        <button
+                          onClick={() => {
+                            setBgColor(hsvaToHex(hsva));
+                            setSelectedBgImage(null);
+                          }}
+                          className="ml-auto px-3 py-2 rounded bg-gray-200 text-sm hover:bg-gray-300"
+                        >
+                          Apply
+                        </button>
+                      </div>
+
+                      {/* Color wheel */}
+                      <div className="px-1 py-4">
+                        <ColorWheel />
+                      </div>
                     </div>
-                    <ColorWheel />
-                    <button
-                      onClick={() => {
-                        setBgColor(hsvaToHex(hsva));
-                        setSelectedBgImage(null);
-                      }}
-                      className="mt-3 px-3 py-2 rounded bg-gray-200 text-sm"
-                    >
-                      Apply Color
-                    </button>
                   </div>
                 )}
               </div>
@@ -384,14 +403,14 @@ const Upload = () => {
                     : "bg-blue-500 text-white hover:bg-blue-600"
                 }`}
               >
-                {isImageEnhanced ? "✨ Enhanced" : "Enhance"}
+                {isImageEnhanced ? "✨ Enhanced" : "Enhance✨  "}
               </button>
             )}
           </div>
         )}
 
         {/* Main image preview */}
-        <div className="flex-1 max-w-3xl mx-auto">
+        <div className="flex-1 w-[80vw]  sm:max-w-3xl mx-auto">
           <input
             type="file"
             ref={fileInputRef}

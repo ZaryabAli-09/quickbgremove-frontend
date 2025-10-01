@@ -40,7 +40,7 @@ export default function ImageCanvas({
           maxWidth: "100%", // don’t exceed parent’s width
           maxHeight: "60%", // don’t exceed 80% of screen height
         }}
-        className={`relative   h-96 border border-dashed border-gray-300 rounded-xl flex items-center justify-center transition-all duration-300 mx-auto ${
+        className={`relative   h-auto border border-dashed border-gray-300 rounded-xl flex items-center justify-center transition-all duration-300 mx-auto ${
           loading ? "bg-gray-50" : "bg-white"
         }`}
       >
@@ -67,7 +67,7 @@ export default function ImageCanvas({
             alt="Processed preview"
           />
         ) : (
-          <div className="text-center text-gray-400">
+          <div className="text-center  text-gray-400">
             <svg
               className="w-16 h-16 mx-auto mb-4"
               fill="none"

@@ -74,11 +74,11 @@ function BackgroundRemoveComp() {
             Your browser does not support the video tag.
           </video>
         </div>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl text-center font-bold text-gray-700">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl text-center font-bold text-gray-700">
           Remove Image Background
         </h1>
-        <p className="font-bold text-xl">
-          100% Automatically and{" "}
+        <p className=" text-xl text-center sm:w-[70%] text-gray-700">
+          More than Backround Remover. 100% Automatically and{" "}
           <span className="bg-indigo-600 rounded text-white px-2 py-1">
             Free
           </span>{" "}

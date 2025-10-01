@@ -9,7 +9,7 @@ const Contact = () => {
           <form
             action=""
             className="flex flex-col gap-4
-            w-[75vw] sm:w-auto
+            w-[90vw] sm:w-[500px]
           "
           >
             {" "}
