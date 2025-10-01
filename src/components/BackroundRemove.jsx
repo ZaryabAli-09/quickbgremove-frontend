@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
-import HeroVedio from "../../assets/hero1.mp4";
-import image1 from "../../assets/11.webp";
-import image3 from "../../assets/33.webp";
-import image4 from "../../assets/44.webp";
+import HeroVedio from "../assets/hero1.mp4";
+import image1 from "../assets/11.webp";
+import image3 from "../assets/33.webp";
+import image4 from "../assets/44.webp";
 import { Link, useNavigate } from "react-router-dom";
 
 // bug to be solve : when image is processed and return by server and then we click on try one of these image it donot reflect on ui and when we click on uload then automatically it reflects

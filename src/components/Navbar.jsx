@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useEffect, useRef } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import logo from "../../assets/logo.webp";
+import logo from "../assets/logo.webp";
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef();

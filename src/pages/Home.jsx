@@ -1,6 +1,6 @@
-import SliderComponent from "../components/Navbar/SliderComponent";
-import Desc from "../components/Navbar/Desc";
-import BackgroundRemoveComp from "../components/Navbar/BackroundRemove";
+import SliderComponent from "../components/SliderComponent";
+import Desc from "../components/Desc";
+import BackgroundRemoveComp from "../components/BackroundRemove";
 import Footer from "../components/Footer";
 
 function Home() {

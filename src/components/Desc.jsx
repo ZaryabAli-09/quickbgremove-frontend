@@ -1,4 +1,4 @@
-import DescVedio from "../../assets/desc.mp4";
+import DescVedio from "../assets/desc.mp4";
 function Desc() {
   return (
     <div className="flex flex-col lg:flex-row-reverse items-center justify-between  lg:p-12  rounded-lg  p-6  sm:p-16 md:p-20">

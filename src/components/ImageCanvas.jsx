@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ImageProcessingBackdrop } from "./Navbar/ImageProcessingBackdrop";
+import { ImageProcessingBackdrop } from "./ImageProcessingBackdrop";
 
 export default function ImageCanvas({
   imageUrl,

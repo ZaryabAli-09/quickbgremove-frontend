@@ -52,7 +52,6 @@ const Upload = () => {
 
       const result = await response.json();
       if (!response.ok) {
-        toast.error("Error fetching Unsplash images.");
         return;
       }
       setUnsplashImages([...result]);
@@ -60,10 +59,6 @@ const Upload = () => {
       toast.error(error.message);
     }
   }
-
-  useEffect(() => {
-    getImagesFromUnsplash();
-  }, []);
 
   // Handle photo upload to add into bg gallery
   function handlePhotoUpload(e) {
@@ -116,7 +111,7 @@ const Upload = () => {
     }
   };
 
-  // Image enhancement / reset
+  // Image enhancement
   async function handleUpscaleImg() {
     setLoading(true);
 
@@ -157,15 +152,7 @@ const Upload = () => {
     }
   }
 
-  // Reset on state file
-  useEffect(() => {
-    if (fileFromState) {
-      setFile(fileFromState);
-      setLocalImageDisplay(URL.createObjectURL(fileFromState));
-      removeBackground(fileFromState);
-    }
-  }, [fileFromState]);
-
+  // on download processed image
   async function handleDownload() {
     try {
       const formData = new FormData();
@@ -208,7 +195,6 @@ const Upload = () => {
         }
       }
 
-      console.log(formData.entries());
       // Send to backend
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/tools/mergingBgEdits`,
@@ -235,9 +221,23 @@ const Upload = () => {
       URL.revokeObjectURL(downloadUrl); // cleanup
     } catch (error) {
       toast.error("Failed to download image.");
-      console.error("Download failed:", error);
     }
   }
+  // get images from Unsplash
+  useEffect(() => {
+    getImagesFromUnsplash();
+  }, []);
+
+  // Reset on state file
+  useEffect(() => {
+    if (!fileFromState) return;
+
+    if (fileFromState) {
+      setFile(fileFromState);
+      setLocalImageDisplay(URL.createObjectURL(fileFromState));
+      removeBackground(fileFromState);
+    }
+  }, [fileFromState]);
   return (
     <div className="min-h-screen bg-gray-100 py-6 px-3 sm:px-6 lg:px-8">
       {/* Top navbar */}

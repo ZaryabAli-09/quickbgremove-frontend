@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import "./index.css";
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "./components/Navbar";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
