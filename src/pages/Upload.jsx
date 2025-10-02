@@ -558,7 +558,7 @@ const Upload = () => {
         )}
 
         {/* Main image preview */}
-        <div className="flex-1 w-[80vw]  sm:max-w-3xl mx-auto">
+        <div className="flex-1 w-[80vw]  sm:max-w-3xl mx-auto ">
           <input
             type="file"
             ref={fileInputRef}

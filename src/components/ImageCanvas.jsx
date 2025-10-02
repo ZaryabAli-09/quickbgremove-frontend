@@ -23,13 +23,13 @@ export default function ImageCanvas({
   }, [imageUrl, localImageDisplay]);
 
   return (
-    <div className=" bg-white rounded-2xl p-6 mb-8 border border-gray-200 ">
+    <div className=" bg-white h-auto  rounded-2xl p-6 mb-8 border border-gray-200 ">
       <div
         style={{
           ...(selectedBgImage
             ? {
                 backgroundImage: `url(${selectedBgImage})`,
-                backgroundSize: "cover",
+                backgroundSize: "cover", // makes the whole image visible
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
               }
@@ -38,9 +38,9 @@ export default function ImageCanvas({
           ...(bgColor ? { backgroundColor: hsvaToHex(hsva) } : {}),
           ...(aspectRatio ? { aspectRatio } : { height: "24rem" }),
           maxWidth: "100%", // don’t exceed parent’s width
-          maxHeight: "60%", // don’t exceed 80% of screen height
+          // maxHeight: "60%", // don’t exceed 80% of screen height
         }}
-        className={`relative   h-auto border border-dashed border-gray-300 rounded-xl flex items-center justify-center transition-all duration-300 mx-auto ${
+        className={`relative   h-auto max-h-96 border border-dashed border-gray-300 rounded-xl flex items-center justify-center transition-all duration-300 mx-auto ${
           loading ? "bg-gray-50" : "bg-white"
         }`}
       >
