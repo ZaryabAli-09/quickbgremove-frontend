@@ -24,16 +24,21 @@ const Upload = () => {
 
   const [isImageEnhanced, setIsImageEnhanced] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
-  const [activeTab, setActiveTab] = useState("");
-  const [bgActiveTab, setBgActiveTab] = useState("photo");
-  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("background");
+  const [bgActiveTab, setBgActiveTab] = useState("magic");
+  const [isSidePanelOpen, setIsSidePanelOpen] = useState(true);
 
   const [selectedBgImage, setSelectedBgImage] = useState(null);
   const [bgColor, setBgColor] = useState(null);
 
   const { hsva } = useColorWheel();
   const [unsplashImages, setUnsplashImages] = useState([]);
+
+  const [prompt, setPrompt] = useState("");
+  const [aiGeneratedImages, setAiGeneratedImages] = useState([]);
+  const [aiGenImgLoading, setAiGenImgLoading] = useState(false);
 
   // Fetch images from Unsplash API
   async function getImagesFromUnsplash() {
@@ -60,6 +65,7 @@ const Upload = () => {
     }
   }
 
+  console.log(selectedBgImage);
   // Handle photo upload to add into bg gallery
   function handlePhotoUpload(e) {
     const file = e.target.files[0];
@@ -155,6 +161,7 @@ const Upload = () => {
   // on download processed image
   async function handleDownload() {
     try {
+      setDownloadLoading(true);
       const formData = new FormData();
 
       if (!editBlob) {
@@ -169,6 +176,7 @@ const Upload = () => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        setDownloadLoading(false);
         return;
       }
       // Always send processed image blob
@@ -206,6 +214,7 @@ const Upload = () => {
 
       if (!response.ok) {
         toast.error("Failed to download image.");
+        setDownloadLoading(false);
         return;
       }
 
@@ -219,8 +228,50 @@ const Upload = () => {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(downloadUrl); // cleanup
+      setDownloadLoading(false);
     } catch (error) {
       toast.error("Failed to download image.");
+      setDownloadLoading(false);
+    } finally {
+      setDownloadLoading(false);
+    }
+  }
+
+  async function generateImage() {
+    try {
+      if (!prompt || prompt.trim() === "") {
+        toast.error("Prompt is required");
+        return;
+      }
+
+      setAiGenImgLoading(true);
+      // Send to backend
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/tools/generateImage`,
+        {
+          method: "POST",
+          body: JSON.stringify({ prompt }),
+          headers: new Headers({ "Content-Type": "application/json" }),
+        }
+      );
+      const blob = await response.blob();
+      if (!response.ok) {
+        toast.error(blob.message || "Failed to generate image");
+        setAiGenImgLoading(false);
+
+        return;
+      }
+
+      const processedImageUrl = URL.createObjectURL(blob);
+      setAiGeneratedImages([...aiGeneratedImages, processedImageUrl]);
+      toast.success("Image generated successfully");
+      setAiGenImgLoading(false);
+    } catch (error) {
+      toast.error(error.message || "Failed to generate image");
+      setAiGenImgLoading(false);
+    } finally {
+      setAiGenImgLoading(false);
+      setPrompt("");
     }
   }
   // get images from Unsplash
@@ -274,10 +325,11 @@ const Upload = () => {
 
             {/* Download button */}
             <button
+              disabled={downloadLoading}
               onClick={handleDownload}
-              className="absolute right-0 md:absolute md:top-0 md:right-2 px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium shadow hover:bg-blue-600 transition"
+              className="absolute right-0 md:absolute md:top-0 md:right-2 px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium shadow hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Download
+              {downloadLoading ? "Downloading..." : "Download"}
             </button>
           </div>
         </div>
@@ -314,20 +366,116 @@ const Upload = () => {
                   >
                     Photo
                   </span>
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs cursor-pointer ${
+                      bgActiveTab === "magic" && "bg-gray-200 font-semibold"
+                    }`}
+                    onClick={() => {
+                      setBgActiveTab("magic");
+                    }}
+                  >
+                    Magic
+                  </span>
                 </div>
+
+                {bgActiveTab === "magic" && (
+                  <div className="flex flex-col gap-6 h-auto lg:h-[28rem] overflow-y-auto p-4 rounded-2xl bg-gradient-to-b from-gray-50 to-white shadow-inner">
+                    {/* Heading */}
+                    <div className="text-center space-y-1">
+                      <h2 className="text-xl  font-semibold text-gray-800">
+                        ✨ Magic Backgrounds
+                      </h2>
+                      <p className="text-gray-500 text-sm ">
+                        Describe your dream background and let AI create it for
+                        you.
+                      </p>
+                    </div>
+
+                    {/* Input */}
+                    <div className="flex  sm:flex-row items-center gap-3 mx-auto w-full max-w-2xl">
+                      <input
+                        value={prompt}
+                        disabled={aiGenImgLoading}
+                        onChange={(e) => setPrompt(e.target.value)}
+                        className="flex-1 p-3 bg-white border border-gray-200 rounded-xl shadow-sm text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:cursor-wait disabled:opacity-50"
+                        type="text"
+                        placeholder="e.g. Futuristic cityscape with neon lights"
+                      />
+                      <button
+                        disabled={aiGenImgLoading}
+                        onClick={generateImage}
+                        className="px-2 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl text-sm font-semibold shadow-md hover:opacity-90 transition disabled:cursor-wait disabled:opacity-50 disabled:animate-pulse"
+                      >
+                        ✨
+                      </button>
+                    </div>
+
+                    {/* Image results */}
+                    <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-4">
+                      {/* None block */}
+                      <div
+                        onClick={() => setSelectedBgImage(null)}
+                        className="w-full aspect-square flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl text-gray-400 cursor-pointer hover:bg-gray-50 transition"
+                      >
+                        <span className="text-sm">None</span>
+                      </div>
+
+                      {aiGeneratedImages &&
+                        aiGeneratedImages.length > 0 &&
+                        aiGeneratedImages.map((img) => (
+                          <div
+                            onClick={() => setSelectedBgImage(img)}
+                            key={img}
+                            className="relative w-full aspect-square rounded-xl overflow-hidden cursor-pointer group shadow hover:scale-105 transition"
+                          >
+                            <img
+                              src={img}
+                              alt="Generated"
+                              className="object-cover w-full h-full"
+                            />
+                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white font-medium text-sm transition">
+                              Use
+                            </div>
+                          </div>
+                        ))}
+                      {/* Example generated images (replace with your loop/map) */}
+                      {unsplashImages &&
+                        unsplashImages.slice(-2).map((img) => (
+                          <div
+                            onClick={() =>
+                              setSelectedBgImage(
+                                img.urls.small_s3 || img.urls.small
+                              )
+                            }
+                            key={img}
+                            className="relative w-full aspect-square rounded-xl overflow-hidden cursor-pointer group shadow hover:scale-105 transition"
+                          >
+                            <img
+                              src={img.urls.small_s3 || img.urls.small}
+                              alt="Generated"
+                              className="object-cover w-full h-full"
+                            />
+                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white font-medium text-sm transition">
+                              Use
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Bg selection */}
                 {bgActiveTab === "photo" && (
-                  <div className="grid grid-cols-4 md:grid-cols-3 gap-2 h-auto md:h-96 overflow-hidden overflow-y-scroll">
+                  <div className="grid grid-cols-4 md:grid-cols-3 gap-2 h-auto md:h-96 overflow-hidden overflow-y-scroll p-4 rounded-2xl bg-gradient-to-b from-gray-50 to-white shadow-inner">
                     <div
                       onClick={() => setSelectedBgImage(null)}
-                      className="w-12 h-12 sm:w-20 sm:h-20 flex items-center justify-center border rounded-md text-gray-400 cursor-pointer"
+                      className="w-full aspect-square flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl text-gray-400 cursor-pointer hover:bg-gray-50 transition"
                     >
                       None
                     </div>
                     <div
                       onClick={() => uploadPhotoRef.current.click()}
-                      className="w-12 h-12 sm:w-20 sm:h-20 flex items-center justify-center border rounded-md text-3xl text-gray-400 cursor-pointer"
+                      className="w-full aspect-square flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl text-gray-400 cursor-pointer hover:bg-gray-50 transition"
                     >
                       +
                     </div>
@@ -343,7 +491,7 @@ const Upload = () => {
                         key={img.id}
                         src={img.urls.small_s3 || img.urls.small}
                         alt=""
-                        className="w-12 h-12 sm:w-20 sm:h-20  object-cover rounded-md cursor-pointer hover:opacity-80"
+                        className="relative w-full aspect-square rounded-xl overflow-hidden cursor-pointer group shadow hover:scale-95 transition"
                         onClick={() => {
                           setSelectedBgImage(
                             img.urls.small_s3 || img.urls.small
@@ -356,7 +504,7 @@ const Upload = () => {
                 )}
 
                 {bgActiveTab === "color" && (
-                  <div className="mt-4">
+                  <div className="mt-4 p-4 rounded-2xl bg-gradient-to-b from-gray-50 to-white shadow-inner">
                     {/* Scrollable container */}
                     <div className="h-80 overflow-y-auto pr-2">
                       {/* Sticky top bar with controls */}
