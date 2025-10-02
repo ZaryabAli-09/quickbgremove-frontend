@@ -65,7 +65,6 @@ const Upload = () => {
     }
   }
 
-  console.log(selectedBgImage);
   // Handle photo upload to add into bg gallery
   function handlePhotoUpload(e) {
     const file = e.target.files[0];
