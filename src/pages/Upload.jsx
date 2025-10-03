@@ -351,14 +351,14 @@ const Upload = () => {
       rounded-lg 
       overflow-y-auto
       h-96
-       fixed bottom-0 left-0 w-full z-50 lg:relative lg:w-96 
+       fixed bottom-0 left-0 w-full z-40 lg:relative lg:w-96 
        
     "
           >
             <div>
               <button
                 onClick={() => setIsSidePanelOpen(false)}
-                className="absolute top-2 right-2 z-50  border  shadow-sm rounded-full w-8 h-8 flex items-center justify-center hover:scale-110 transition-all duration-200 font-bold"
+                className="absolute top-2 right-2 z-40  border  shadow-sm rounded-full w-8 h-8 flex items-center justify-center hover:scale-110 transition-all duration-200 font-bold"
               >
                 ✖
               </button>
@@ -403,7 +403,7 @@ const Upload = () => {
               flex flex-col gap-4 p-4
               rounded-t-2xl lg:rounded-2xl
               bg-gradient-to-b from-gray-50 to-white shadow-inner 
-              z-50
+              z-40
             "
                     >
                       {/* Header + Close button */}
