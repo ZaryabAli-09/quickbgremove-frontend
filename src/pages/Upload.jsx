@@ -6,6 +6,10 @@ import { useColorWheel } from "../context/ColorWheelContext";
 import { hsvaToHex } from "@uiw/color-convert";
 import ImageCanvas from "../components/ImageCanvas";
 import { toast } from "react-hot-toast";
+import { FaImages } from "react-icons/fa6";
+import { GrThreeDEffects } from "react-icons/gr";
+import { IoIosCloudDownload } from "react-icons/io";
+import { RiAiGenerate } from "react-icons/ri";
 
 const Upload = () => {
   const location = useLocation();
@@ -291,34 +295,35 @@ const Upload = () => {
   return (
     <div className=" bg-gray-100 pb-24  relative">
       {/* Top navbar */}
-      <nav className="fixed -bottom-1 z-20 w-full  lg:relative  md:max-w-2xl  md:mx-auto ">
-        <div className="rounded-xl p-4  bg-white border border-gray-200 md:rounded-full  md:p-2 md:mb-4">
-          <div className="flex flex-wrap items-center justify-start gap-2 relative md:justify-center ">
+      <nav className="fixed -bottom-1 z-20 w-full  lg:relative  lg:max-w-2xl  md:mx-auto ">
+        <div className="rounded-xl p-10  bg-white border border-gray-200 md:rounded-full  md:p-2 md:mb-4">
+          <div className="flex rounded flex-wrap items-center justify-start gap-2 relative md:justify-center ">
             {/* Tabs */}
             <button
               onClick={() => {
                 setActiveTab("background");
                 setIsSidePanelOpen(true);
               }}
-              className={`px-3 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`px-3 flex items-center justify-center gap-1 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                 activeTab === "background"
                   ? "bg-gray-100 text-gray-700 shadow-sm"
                   : "text-gray-600 hover:bg-gray-100"
               }`}
             >
-              Background
+              <FaImages className="text-lg" /> Background
             </button>
             <button
               onClick={() => {
                 setActiveTab("effects");
                 setIsSidePanelOpen(true);
               }}
-              className={`px-3 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`px-3 flex items-center justify-center gap-1  py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                 activeTab === "effects"
                   ? "bg-gray-100 text-gray-700 shadow-sm"
                   : "text-gray-600 hover:bg-gray-100"
               }`}
             >
+              <GrThreeDEffects className="text-lg" />
               Effects
             </button>
 
@@ -328,7 +333,9 @@ const Upload = () => {
               onClick={handleDownload}
               className="absolute right-0 md:absolute md:top-0 md:right-2 px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium shadow hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {downloadLoading ? "Downloading..." : "Download"}
+              <IoIosCloudDownload
+                className={`text-lg ${downloadLoading && "animate-bounce"}`}
+              />
             </button>
           </div>
         </div>
@@ -437,7 +444,11 @@ const Upload = () => {
                   disabled:cursor-wait disabled:opacity-50 disabled:animate-pulse
                 "
                         >
-                          ✨
+                          <RiAiGenerate
+                            className={`text-xl ${
+                              aiGenImgLoading && "animate-ping"
+                            }`}
+                          />
                         </button>
                       </div>
 
