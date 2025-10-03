@@ -36,14 +36,6 @@ function ColorWheel() {
           setHsva({ ...hsva, ...newShade });
         }}
       />
-      <div
-        style={{
-          width: "100%",
-          height: 34,
-          marginTop: 20,
-          background: hsvaToHex(hsva),
-        }}
-      ></div>
     </Fragment>
   );
 }
