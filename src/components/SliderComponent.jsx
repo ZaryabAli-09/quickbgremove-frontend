@@ -40,7 +40,7 @@ const SliderComponent = () => {
 
   return (
     <div>
-      <h1 className="text-4xl md:text-3xl lg:text-5xl text-center font-bold text-gray-700 my-10">
+      <h1 className="text-4xl md:text-3xl lg:text-5xl text-center font-extrabold text-gray-700 my-10 mt-24">
         Ravishing Quality
       </h1>
       <div>

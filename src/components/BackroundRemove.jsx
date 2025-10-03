@@ -82,11 +82,13 @@ function BackgroundRemoveComp() {
             Your browser does not support the video tag.
           </video>
         </div>
-        <h1 className="text-3xl md:text-4xl lg:text-5xl text-center font-bold text-gray-700">
+        <h1 className="text-3xl  md:text-4xl lg:text-5xl text-center font-extrabold text-gray-700">
           Remove Image Background
         </h1>
-        <p className=" text-xl text-center sm:w-[70%] text-gray-500">
-          More than Backround Remover. 100% Automatically and{" "}
+        <p className="font-bold  text-xl text-center sm:w-[100%] text-gray-500 text-nowrap">
+          More than Backround Remover.100%
+          <br />
+          Automatically and{" "}
           <span className="bg-indigo-600 rounded text-white px-2 py-1">
             Free
           </span>{" "}
@@ -103,15 +105,17 @@ function BackgroundRemoveComp() {
 
         <button
           onClick={handleButtonClick}
-          className="my-5 text-sm px-3 font-bold py-6 flex items-center  transition-transform duration-500 transform scale-100 hover:scale-110  black border-2 rounded-full shadow-md shadow-indigo-600 hover:bg-gray-50 absolute top-5 z-10 "
+          className="my-5 text-sm px-6 font-bold py-7 flex items-center  transition-transform duration-500 transform scale-100 hover:scale-110  black border-2 rounded-full shadow-md shadow-indigo-600 hover:bg-gray-50 absolute top-5 z-10  flex-col "
         >
-          Upload
+          <RiUpload2Fill className="text-2xl text-indigo-600 animate-bounce" />
+
+          <div className="text-xs text-gray-700 font-extrabold">Upload</div>
         </button>
 
         <div
           onDrop={handleDrop}
           onDragOver={handleDragOver}
-          className="mb-4 w-full max-w-md h-80 bg-white border  rounded-xl flex items-center justify-center text-2xl font-bold text-gray-700 relative shadow-2xl"
+          className="mb-4 w-full max-w-md h-80 bg-white border border-gray-100  rounded-xl flex items-center justify-center text-2xl font-extrabold text-gray-700 relative shadow-2xl shadow-indigo-200"
         >
           {loading ? (
             <div className="flex flex-col items-center justify-center">
