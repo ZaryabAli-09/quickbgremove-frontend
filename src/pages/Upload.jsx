@@ -289,7 +289,7 @@ const Upload = () => {
     }
   }, [fileFromState]);
   return (
-    <div className="min-h-screen bg-gray-100  relative">
+    <div className=" bg-gray-100 pb-24  relative">
       {/* Top navbar */}
       <nav className="fixed -bottom-1 z-20 w-full  lg:relative  md:max-w-2xl  md:mx-auto ">
         <div className="rounded-xl p-4  bg-white border border-gray-200 md:rounded-full  md:p-2 md:mb-4">
@@ -603,7 +603,7 @@ const Upload = () => {
         )}
 
         {/* Main image preview */}
-        <div className="flex-1 w-[80vw]  sm:max-w-3xl mx-auto ">
+        <div className="flex-1 w-[100vw]  sm:max-w-3xl mx-auto ">
           <input
             type="file"
             ref={fileInputRef}
