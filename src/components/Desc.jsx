@@ -4,19 +4,18 @@ function Desc() {
     <div className="flex flex-col lg:flex-row-reverse items-center justify-between  lg:p-12  rounded-lg  p-6  sm:p-16 md:p-20">
       {/* Text Section */}
       <div className="lg:w-1/2 mb-8 lg:mb-0  lg:text-left">
-        <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-700 mb-4">
-          Remove Backgrounds Instantly with QuickBGRemove!
+        <h2 className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-gray-700 mb-4">
+          All-in-one AI background remover & generator
         </h2>
-        <p className="text-gray-700 mb-4">
-          QuickBGRemove's advanced AI lets you remove backgrounds automatically
-          in just 6 seconds. Enhance your editing workflow and save time with a
-          single click!
+        <p className="text-gray-700 mb-4 lg:w-[70%]">
+          QuickBgRemove lets you remove image backgrounds instantly with
+          precision, making it easy to isolate subjects in just seconds.
         </p>
-        <p className="text-gray-700">
-          Whether you need a transparent background (PNG), a white backdrop, or
-          simply want to isolate the subject, QuickBGRemove has you covered.
-          Perfect for professionals and anyone looking to elevate their photo
-          editing game.
+
+        <p className="text-gray-700 mb-4 lg:w-[70%]">
+          You can also generate AI-powered backdrops from prompts, apply solid
+          colors, use custom photos or Unsplash images, and resize your pictures
+          all in one simple tool.
         </p>
       </div>
 
