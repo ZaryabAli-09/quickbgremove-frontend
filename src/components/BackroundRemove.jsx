@@ -4,6 +4,7 @@ import image1 from "../assets/11.webp";
 import image3 from "../assets/33.webp";
 import image4 from "../assets/44.webp";
 import { Link, useNavigate } from "react-router-dom";
+import { RiUpload2Fill } from "react-icons/ri";
 
 // bug to be solve : when image is processed and return by server and then we click on try one of these image it donot reflect on ui and when we click on uload then automatically it reflects
 
@@ -84,14 +85,14 @@ function BackgroundRemoveComp() {
         <h1 className="text-3xl md:text-4xl lg:text-5xl text-center font-bold text-gray-700">
           Remove Image Background
         </h1>
-        <p className=" text-xl text-center sm:w-[70%] text-gray-700">
+        <p className=" text-xl text-center sm:w-[70%] text-gray-500">
           More than Backround Remover. 100% Automatically and{" "}
           <span className="bg-indigo-600 rounded text-white px-2 py-1">
             Free
           </span>{" "}
         </p>
       </div>
-      <div className="flex flex-col items-center justify-center w-full max-w-lg">
+      <div className="flex flex-col items-center justify-center w-full max-w-lg relative mt-14">
         <input
           ref={fileInputRef}
           type="file"
@@ -102,7 +103,7 @@ function BackgroundRemoveComp() {
 
         <button
           onClick={handleButtonClick}
-          className="my-5 text-sm px-3 font-bold py-6 flex items-center  transition-transform duration-500 transform scale-100 hover:scale-110  black border-2 rounded-full shadow-md shadow-indigo-600 hover:bg-gray-50 "
+          className="my-5 text-sm px-3 font-bold py-6 flex items-center  transition-transform duration-500 transform scale-100 hover:scale-110  black border-2 rounded-full shadow-md shadow-indigo-600 hover:bg-gray-50 absolute top-5 z-10 "
         >
           Upload
         </button>
@@ -110,7 +111,7 @@ function BackgroundRemoveComp() {
         <div
           onDrop={handleDrop}
           onDragOver={handleDragOver}
-          className="mb-4 w-full max-w-sm h-72 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 relative"
+          className="mb-4 w-full max-w-md h-80 bg-white border  rounded-xl flex items-center justify-center text-2xl font-bold text-gray-700 relative shadow-2xl"
         >
           {loading ? (
             <div className="flex flex-col items-center justify-center">
@@ -129,14 +130,14 @@ function BackgroundRemoveComp() {
               alt="Selected"
             />
           ) : (
-            "Drag & Drop Image Here or Click to Upload"
+            "or drop a file"
           )}
         </div>
         <div
           className=" font-li
            text-center"
         >
-          <p className="font-bold  text-gray-600 text-lg mb-2">
+          <p className="font-bold  text-gray-500 text-lg mb-2">
             No image? Try one of these:
           </p>
           <div className="flex items-center justify-center gap-2">
@@ -164,7 +165,7 @@ function BackgroundRemoveComp() {
             />
           </div>
 
-          <p className="text-xs mt-4 text-gray-600 mb-4">
+          <p className="text-xs mt-4 text-gray-500 mb-4">
             By uploading an image or URL you agree to our{" "}
             <Link
               className="cursor-pointer underline font-bold"
@@ -184,50 +185,6 @@ function BackgroundRemoveComp() {
             .
           </p>
         </div>
-        {/* {file &&
-          (!imageUrl ? (
-            <button
-              className="px-6 py-3 flex items-center hover:scale-105 ease-out duration-100 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-800 transition-colors"
-              onClick={uploadFile}
-            >
-              <svg
-                className="relative w-5 h-5 mr-2 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                ></path>
-              </svg>
-              Remove Background
-            </button>
-          ) : (
-            <button
-              className="px-6 py-3 flex items-center hover:scale-105 ease-out duration-100 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-800 transition-colors"
-              onClick={handleDownload}
-            >
-              <svg
-                className="relative w-5 h-5 mr-2 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                ></path>
-              </svg>
-              Download Image
-            </button>
-          ))} */}
       </div>
     </div>
   );

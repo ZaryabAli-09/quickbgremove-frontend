@@ -23,8 +23,8 @@ const Navbar = () => {
     };
   }, [isMobileMenuOpen]);
   return (
-    <nav className="bg-white  border-gray-300 relative z-50">
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
+    <nav className="bg-white border-b bg-opacity-80 border-gray-100 sticky top-0 backdrop:blur-sm z-50 ">
+      <div className="container mx-auto p-4    flex items-center justify-between">
         {/* Logo */}
         <div className="text-xl font-bold">
           <Link to="/" className="text-gray-800 ">
