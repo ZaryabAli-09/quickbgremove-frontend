@@ -345,20 +345,18 @@ const Upload = () => {
       <div className="w-full md:max-w-7xl md:mx-auto flex flex-col  relative lg:flex-row">
         {isSidePanelOpen && (
           <div
-            className="
-     mx-auto 
-      bg-white border border-gray-200 
-      rounded-lg 
-      overflow-y-auto
-      h-96
-       fixed bottom-0 left-0 w-full z-40 lg:relative lg:w-96 
-       
-    "
+            className={`
+    mx-auto bg-white border border-gray-200 rounded-lg overflow-y-auto h-96
+    fixed bottom-0 left-0 w-full z-40 lg:relative lg:w-96 bg-opacity-90
+    transform-gpu transition-transform duration-1000 ease-out
+    ${isSidePanelOpen ? "translate-y-0" : "translate-y-full"}
+    lg:translate-y-0
+  `}
           >
             <div>
               <button
                 onClick={() => setIsSidePanelOpen(false)}
-                className="absolute top-2 right-2 z-40  border  shadow-sm rounded-full w-8 h-8 flex items-center justify-center hover:scale-110 transition-all duration-200 font-bold"
+                className="absolute top-2 right-2 z-40 border shadow-sm rounded-full w-8 h-8 flex items-center justify-center hover:scale-110 transition-all duration-200 font-bold"
               >
                 ✖
               </button>
@@ -366,10 +364,11 @@ const Upload = () => {
             {activeTab === "background" && (
               <div>
                 {/* --- Tabs for bg options --- */}
-                <div className="flex justify-center gap-3  sticky top-0 z-20 bg-white/90 backdrop-blur-sm pt-2 rounded-lg ">
+                <div className="flex justify-center gap-3 text-gray-600  sticky top-0 z-20 backdrop-blur-sm pt-2 rounded-lg ">
                   <span
                     className={`px-3 py-1 rounded-full text-xs cursor-pointer ${
-                      bgActiveTab === "color" && "bg-gray-200 font-semibold"
+                      bgActiveTab === "color" &&
+                      "bg-gray-700 text-white   font-semibold"
                     }`}
                     onClick={() => setBgActiveTab("color")}
                   >
@@ -377,7 +376,8 @@ const Upload = () => {
                   </span>
                   <span
                     className={`px-3 py-1 rounded-full text-xs cursor-pointer ${
-                      bgActiveTab === "photo" && "bg-gray-200 font-semibold"
+                      bgActiveTab === "photo" &&
+                      "bg-gray-700  text-white font-semibold"
                     }`}
                     onClick={() => setBgActiveTab("photo")}
                   >
@@ -385,7 +385,8 @@ const Upload = () => {
                   </span>
                   <span
                     className={`px-3 py-1 rounded-full text-xs cursor-pointer ${
-                      bgActiveTab === "magic" && "bg-gray-200 font-semibold"
+                      bgActiveTab === "magic" &&
+                      "bg-gray-700 text-white font-semibold"
                     }`}
                     onClick={() => setBgActiveTab("magic")}
                   >
