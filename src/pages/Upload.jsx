@@ -254,19 +254,19 @@ const Upload = () => {
         {
           method: "POST",
           body: JSON.stringify({ prompt }),
-          headers: new Headers({ "Content-Type": "application/json" }),
+          headers: { "Content-Type": "application/json" },
         }
       );
-      const blob = await response.blob();
+      const result = await response.json();
+
       if (!response.ok) {
-        toast.error(blob.message || "Failed to generate image");
+        toast.error(result.message || "Failed to generate image");
         setAiGenImgLoading(false);
 
         return;
       }
 
-      const processedImageUrl = URL.createObjectURL(blob);
-      setAiGeneratedImages([...aiGeneratedImages, processedImageUrl]);
+      setAiGeneratedImages([...aiGeneratedImages, result.imageUrl]);
       toast.success("Image generated successfully");
       setAiGenImgLoading(false);
     } catch (error) {
